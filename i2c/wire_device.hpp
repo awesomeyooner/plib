@@ -15,7 +15,7 @@ class WireDevice{
 
     public:
 
-        WireDevice(int bus, int address, int page_bytes = 8){
+        WireDevice(int address, int bus = I2C::get_bus(), int page_bytes = 8){
             device.addr = address;
             device.bus = bus;
             device.page_bytes = page_bytes; // max for MCP2221A
@@ -31,6 +31,30 @@ class WireDevice{
 
         i2c_device* get(){
             return &device;
+        }
+
+        StatusedValue<float> read_from_register(uint8_t reg){
+            std::vector<uint8_t> data;
+            data.push_back(reg);
+
+            if(write(data) != StatusCode::OK)
+                return StatusedValue<float>(0, StatusCode::FAILED);
+            
+            StatusedValue<std::vector<uint8_t>> read_status = read(sizeof(float));
+
+            if(read_status.status != StatusCode::OK)
+                return StatusedValue<float>(0, StatusCode::FAILED);
+
+            float val = I2C::bytes_to_float(read_status.value);
+
+            return StatusedValue<float>(val, StatusCode::OK);
+        }
+
+        StatusCode write_to_register(uint8_t reg, float val){
+            std::vector<uint8_t> data = I2C::float_to_bytes(val);
+            data.insert(data.begin(), reg);
+
+            return write(data);
         }
 
         StatusedValue<std::vector<uint8_t>> read(size_t num_bytes){

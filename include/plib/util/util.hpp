@@ -7,6 +7,7 @@
 #include <iomanip>
 
 #include "status.hpp"
+#include <limits>
 
 namespace util{
 

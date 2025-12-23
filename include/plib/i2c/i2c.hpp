@@ -13,7 +13,6 @@
 #include <filesystem>
 #include <system_error>
 #include "util/logger.hpp"
-
 #include "util/status.hpp"
 
 namespace fs = std::filesystem;

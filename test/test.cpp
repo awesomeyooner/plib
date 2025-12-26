@@ -7,10 +7,9 @@ int main()
 {
     util::print("Hello World!");
 
-    status_utils::StatusedValue<std::string> input = util::get_user_input_string("Enter a string: ");
+    auto input = util::get_user_input_double("Enter a number: ", true, "Sorry, your input was not a number. Please enter a number: ");
 
-    util::print(input.to_string());
-    util::print({"You said: ", input.value});
+    util::print(input.value);
 
     return 0;
 }

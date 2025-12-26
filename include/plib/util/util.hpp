@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <exception>
 #include <sstream>
 #include <iomanip>
 
@@ -11,160 +12,139 @@
 
 namespace util{
 
-    void print(std::string text){
-        std::cout << text << std::endl;
-    }
 
-    /**
-     * @brief `std::to_string` but keeps precision of primitive data types
-     * 
-     * @param data Number to convert
-     * @return std::string 
-     */
-    std::string to_string(double data){
-        std::stringstream stream;
+/**
+ * @brief Send text to the terminal using `std::cout`
+ * 
+ * @param text `std::string` The text to send
+ * @param should_end_line `bool` Whether or not to end the line
+ */
+void print(std::string text, bool should_end_line = true);
 
-        stream << std::fixed << std::setprecision(std::numeric_limits<double>::max_digits10) << data;
 
-        return stream.str();   
-    }
+/**
+ * @brief Send a number to the terminal using `std::cout`
+ * 
+ * @param text `double` The text to send
+ * @param should_end_line `bool` Whether or not to end the line
+ */
+void print(double text, bool should_end_line = true);
 
-    /**
-     * @brief `std::to_string` but keeps precision of primitive data types
-     * 
-     * @param data Number to convert
-     * @return std::string 
-     */
-    std::string to_string(float data){
-        std::stringstream stream;
 
-        stream << std::fixed << std::setprecision(std::numeric_limits<float>::max_digits10) << data;
+/**
+ * @brief Send text to the terminal using `std::cout`
+ * 
+ * @param value `float` The text to send
+ * @param should_end_line `bool` Whether or not to end the line
+ */
+void print(float value, bool should_end_line = true);
 
-        return stream.str();   
-    }
 
-    /**
-     * @brief `std::to_string` but keeps precision of primitive data types
-     * 
-     * @param data Number to convert
-     * @return std::string 
-     */
-    std::string to_string(int data){
-        std::stringstream stream;
+/**
+ * @brief Send a number to the terminal using `std::cout`
+ * 
+ * @param value `int` The text to send
+ * @param should_end_line `bool` Whether or not to end the line
+ */
+void print(int value, bool should_end_line = true);
 
-        stream << std::fixed << std::setprecision(std::numeric_limits<int>::max_digits10) << data;
 
-        return stream.str();   
-    }
-    
+/**
+ * @brief Combines all strings within `texts` into one string
+ * and sends it to the terminal
+ * 
+ * @param texts `std::vector<std::string> Vector of texts
+ * @param should_end_line `bool` Whether or not to end the line
+ */
+void print(std::vector<std::string> texts, bool should_end_line = true);
 
-    /**
-     * @brief Gets user input as a string
-     * 
-     * @return `StatusedValue<std::string>` Returns `StatusCode::ERROR` when the message is `exit`, `StatusCode::OK` otherwise. 
-     */
-    StatusedValue<std::string> get_user_input_string(){
-        std::string buffer;
-        StatusCode status;
 
-        std::cout << "\nSay something!" << std::endl;
+/**
+ * @brief `std::to_string` but keeps precision of primitive data types
+ * 
+ * @param data `double` Number to convert
+ * @return `std::string` The converted string 
+ */
+std::string to_string(double data);
 
-        std::getline(std::cin, buffer);
 
-        if(buffer == "exit")
-            status = StatusCode::ERROR;
-        else
-            status = StatusCode::OK;
+/**
+ * @brief `std::to_string` but keeps precision of primitive data types
+ * 
+ * @param data `float` Number to convert
+ * @return `std::string` The converted string 
+ */
+std::string to_string(float data);
 
-        return StatusedValue<std::string>(buffer, status);
-    }
 
-    /**
-     * @brief Gets user input as a double
-     * 
-     * @return `StatusedValue<double>` Returns `StatusCode::ERROR` when the message is `exit`, `StatusCode::FAILED` if string failed to parse, `StatusCode::OK` if string properly parsed
-     */
-    StatusedValue<double> get_user_input_double(){
-        std::string buffer;
-        double value;
-        StatusCode status = StatusCode::OK;
+/**
+ * @brief `std::to_string` but keeps precision of primitive data types
+ * 
+ * @param data `int` Number to convert
+ * @return `std::string` The converted string 
+ */
+std::string to_string(int data);
 
-        std::cout << "\nSay something!" << std::endl;
 
-        std::getline(std::cin, buffer);
+/**
+ * @brief Gets user input as a string
+ * 
+ * @param prompt `std::string` Defaults to `""` The prompt to ask 
+ * before getting user input
+ * @return `status_utils::StatusedValue<std::string>` Returns `status_utils::StatusCode::FAILED` when the message is `exit`, `status_utils::StatusCode::OK` otherwise. 
+ */
+status_utils::StatusedValue<std::string> get_user_input_string(std::string prompt = "");
 
-        if (buffer == "exit"){
-            status = StatusCode::ERROR;
-            return StatusedValue<double>(value, status);
-        }
 
-        try{
-            value = std::stod(buffer);
-        }
-        catch(std::exception e){
-            status = StatusCode::FAILED;
-        }
+/**
+ * @brief Gets user input as a double
+ * 
+ * @param prompt `std::string` Defaults to `Say Something!` The prompt to ask 
+ * before getting user input
+ * @param persistent `bool` Defaults to `false`, whether or not to 
+ * keep on prompting or end with an error
+ * @param error_message `std::string` Defaults to `Sorry, please try again:`
+ * The error message to send 
+ * @return `status_utils::StatusedValue<std::string>` Returns `status_utils::StatusCode::FAILED` when the message is `exit`, `status_utils::StatusCode::OK` otherwise. 
+ */
+status_utils::StatusedValue<double> get_user_input_double(
+    std::string prompt = "", 
+    bool persistent = false, 
+    std::string error_message = "Sorry, please try again: ");
 
-        return StatusedValue<double>(value, status);
-    }
 
-    /**
-     * @brief Gets user input as a float
-     * 
-     * @return `StatusedValue<float>` Returns `StatusCode::ERROR` when the message is `exit`, `StatusCode::FAILED` if string failed to parse, `StatusCode::OK` if string properly parsed
-     */
-    StatusedValue<float> get_user_input_float(){
-        std::string buffer;
-        float value;
-        StatusCode status = StatusCode::OK;
+/**
+ * @brief Gets user input as a float
+ * 
+ * @param prompt `std::string` Defaults to `` The prompt to ask 
+ * before getting user input
+ * @param persistent `bool` Defaults to `false`, whether or not to 
+ * keep on prompting or end with an error
+ * @param error_message `std::string` Defaults to `Sorry, please try again:`
+ * The error message to send 
+ * @return `status_utils::StatusedValue<std::string>` Returns `status_utils::StatusCode::FAILED` when the message is `exit`, `status_utils::StatusCode::OK` otherwise. 
+ */
+status_utils::StatusedValue<float> get_user_input_float(
+    std::string prompt = "", 
+    bool persistent = false, 
+    std::string error_message = "Sorry, please try again: ");
 
-        std::cout << "\nSay something!" << std::endl;
 
-        std::getline(std::cin, buffer);
-
-        if (buffer == "exit"){
-            status = StatusCode::ERROR;
-            return StatusedValue<float>(value, status);
-        }
-
-        try{
-            value = std::stof(buffer);
-        }
-        catch(std::exception e){
-            status = StatusCode::FAILED;
-        }
-
-        return StatusedValue<float>(value, status);
-    }
-
-    /**
-     * @brief Gets user input as an int
-     * 
-     * @return `StatusedValue<int>` Returns `StatusCode::ERROR` when the message is `exit`, `StatusCode::FAILED` if string failed to parse, `StatusCode::OK` if string properly parsed
-     */
-    StatusedValue<int> get_user_input_int(){
-        std::string buffer;
-        int value;
-        StatusCode status = StatusCode::OK;
-
-        std::cout << "\nSay something!" << std::endl;
-
-        std::getline(std::cin, buffer);
-
-        if (buffer == "exit"){
-            status = StatusCode::ERROR;
-            return StatusedValue<int>(value, status);
-        }
-
-        try{
-            value = std::stoi(buffer);
-        }
-        catch(std::exception e){
-            status = StatusCode::FAILED;
-        }
-
-        return StatusedValue<int>(value, status);
-    }
+/**
+ * @brief Gets user input as a int
+ * 
+ * @param prompt `std::string` Defaults to `` The prompt to ask 
+ * before getting user input
+ * @param persistent `bool` Defaults to `false`, whether or not to 
+ * keep on prompting or end with an error
+ * @param error_message `std::string` Defaults to `Sorry, please try again:`
+ * The error message to send 
+ * @return `status_utils::StatusedValue<std::string>` Returns `status_utils::StatusCode::FAILED` when the message is `exit`, `status_utils::StatusCode::OK` otherwise. 
+ */
+status_utils::StatusedValue<int> get_user_input_int(
+    std::string prompt = "", 
+    bool persistent = false, 
+    std::string error_message = "Sorry, please try again: ");
 
 } // namespace util
 

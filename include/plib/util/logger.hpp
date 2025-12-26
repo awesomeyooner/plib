@@ -9,105 +9,92 @@
 class Logger{
     
     public:
-        static std::ofstream log_file;
 
-        static bool initialize(){
-            std::string datetime = get_date_time("-", "_");
-            std::string file_name = "log_" + datetime + ".log";
-            log_file.open("../logs/" + file_name);
+        // Log file to write to
+        static std::ofstream m_log_file;
 
-            if(is_file_ok()){
-                info("Program Started!");
-                return true;
-            }
-            else{
-                error("Failed to create .log file!");
-                return false;
-            }
-        }
+        // bool controlling whether to write to the log file or not
+        static bool m_should_write_to_file;
 
-        static void close(){
-            if(!is_file_ok())
-                return;
+        // Initialize the log file
+        static bool initialize();
 
-            info("Program Ended!");
-            log_file.close();
-        }
+        // Log that Logger has been closed and close the log file
+        static void close();
 
-        static void verbose(std::string text, bool is_verbose){
-            if(verbose)
-                log("INFO", text, false);
-        }
+        /**
+         * @brief Log the text with `INFO` as the header
+         * 
+         * @param text `std::string` The text to log
+         */
+        static void info(std::string text);
 
-        static void info(std::string text, bool write_file = true){
-            log("INFO", text, write_file);
-        }
+        /**
+         * @brief Log the text with `ERROR` as the header
+         * 
+         * @param text `std::string` The text to log
+         */
+        static void error(std::string text);
 
-        static void error(std::string text, bool write_file = true){
-            log("ERROR", text, write_file);
-        }
+        /**
+         * @brief Log the text with `DEBUG` as the header
+         * 
+         * @param text `std::string` The text to log
+         */
+        static void debug(std::string text);
 
-        static void debug(std::string text, bool write_file = true){
-            log("DEBUG", text, write_file);
-        }
+        /**
+         * @brief Log text with a header and a timestamp. Optionally, write to a log file
+         * 
+         * @param header `std::string` The header to display, in brackets `[HEADER]`
+         * @param text `std::string` The text to log
+         * @param write_to_file `bool` Whether or not to write to a log file
+         */
+        static void log(std::string header, std::string text, bool should_write_to_file = m_should_write_to_file);
 
-        static void log(std::string header, std::string text, bool write_file = true){
-            std::string formatted = format_text(header, text);
+        /**
+         * @brief Format text such that the current datetime is displayed first, then 
+         * the header, and finally the text
+         * @param header `std::string` The header to use
+         * @param text `std::string` The text to display
+         * @return `std::string` The formatted string 
+         */
+        static std::string format_text(std::string header, std::string text);
 
-            if(write_file)
-                write_to_file(formatted);
+        /**
+         * @brief Write an `std::string` to a logfile
+         * 
+         * @param text `std::string` The text to write
+         */
+        static void write_to_file(std::string text);
 
-            std::cout << formatted << std::endl;
-        }
+        /**
+         * @brief Returns if `m_log_file` is initialized and if it is open
+         * 
+         * @return `bool` Whether or not the log file is initialzed and open
+         */
+        static bool is_file_ok();
 
-        static std::string format_text(std::string header, std::string text){
-            std::string datetime = get_date_time(":", " ");
-            std::string formatted = datetime + " [" + header + "] " + text;
+        /**
+         * @brief Get a formatted string of the current date and time in the following order: year, month
+         * , day, hour, min, sec
+         * 
+         * @param unit_seperator `std::string` The string to use between each unit, like betweent the year, month, and day 
+         * @param gap `std::string` The string to use between the calender date and clock time
+         * @return `std::string` The formatted date and time string 
+         */
+        static std::string get_date_time(std::string unit_seperator = ":", std::string gap = "_");
 
-            return formatted;
-        }
-
-        static void write_to_file(std::string text){
-            if(!log_file && !is_file_ok())
-                return;
-
-            log_file << text << std::endl;
-        }
-
-        static bool is_file_ok(){
-            return log_file && log_file.is_open();
-        }
-
-        static std::string get_date_time(std::string unit_seperator = ":", std::string gap = "_"){
-            time_t time = std::time(NULL);
-
-            tm* datetime = std::localtime(&time);
-
-            std::string year = std::to_string(datetime->tm_year + 1900);
-            std::string month = datetime->tm_mon < 10 ? "0" + std::to_string(datetime->tm_mon) : std::to_string(datetime->tm_mon);
-            std::string day = datetime->tm_mday < 10 ? "0" + std::to_string(datetime->tm_mday) : std::to_string(datetime->tm_mday);
-
-            std::string hour = datetime->tm_hour < 10 ? "0" + std::to_string(datetime->tm_hour) : std::to_string(datetime->tm_hour);
-            std::string min = datetime->tm_min < 10 ? "0" + std::to_string(datetime->tm_min) : std::to_string(datetime->tm_min);
-            std::string sec = datetime->tm_sec < 10 ? "0" + std::to_string(datetime->tm_sec) : std::to_string(datetime->tm_sec);
-
-            std::string all = year + unit_seperator + month + unit_seperator + day + gap + hour + unit_seperator + min + unit_seperator + sec;
-
-            return all;
-        }
-
-        static tm* get_datetime(){
-            time_t time = std::time(NULL);
-
-            tm* datetime = std::localtime(&time);
-
-            return datetime;
-        }
+        /**
+         * @brief Gets the datetime object
+         * 
+         * @return `tm*` The datetime object 
+         */
+        static tm* get_tm();
 
     private:
        
 }; // class Logger
 
-std::ofstream Logger::log_file;
 
 #endif // LOGGER_HPP

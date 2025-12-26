@@ -9,73 +9,99 @@
 #include <vector>
 
 #include "i2c.hpp"
-#include "util/status.hpp"
+#include "plib/util/status.hpp"
 
 class WireDevice{
 
     public:
 
-        WireDevice(int address, int bus = I2C::get_bus(), int page_bytes = 8){
-            device.addr = address;
-            device.bus = bus;
-            device.page_bytes = page_bytes; // max for MCP2221A
-            device.iaddr_bytes = 0;
-            device.tenbit = 0;
-            device.flags = 0;
-            device.delay = 10;
-        }
+        /**
+         * @brief Initialize the device with the given settings
+         * 
+         * @param address `int` The address this device corresponds to
+         * @param bus `int` Default `I2C::get_bus()` - The bus this device is on
+         * @param page_bytes `int` Default `8` - The number of bytes per page
+         */
+        WireDevice(int address, int bus = I2C::get_bus(), int page_bytes = 8);
 
-        int get_address(){
-            return device.addr;
-        }
 
-        i2c_device* get(){
-            return &device;
-        }
+        /**
+         * @brief Get the device address
+         * 
+         * @return `int` The address 
+         */
+        int get_address();
 
-        StatusedValue<float> read_from_register(uint8_t reg){
-            std::vector<uint8_t> data;
-            data.push_back(reg);
+        
+        /**
+         * @brief Get the i2c device pointer
+         * 
+         * @return `i2c_device*` The device pointer 
+         */
+        i2c_device* get();
 
-            if(write(data) != StatusCode::OK)
-                return StatusedValue<float>(0, StatusCode::FAILED);
-            
-            StatusedValue<std::vector<uint8_t>> read_status = read(sizeof(float));
 
-            if(read_status.status != StatusCode::OK)
-                return StatusedValue<float>(0, StatusCode::FAILED);
+        /**
+         * @brief Read a float from the device at a specific register
+         * 
+         * @param reg `uint8_t` The register to read from
+         * @return `status_utils::StatusedValue<float>` 
+         */
+        status_utils::StatusedValue<float> read_from_register(uint8_t reg);
 
-            float val = I2C::bytes_to_float(read_status.value);
 
-            return StatusedValue<float>(val, StatusCode::OK);
-        }
+        /**
+         * @brief Write a float to the specified register
+         * 
+         * @param reg `uint8_t` The register to write to 
+         * @param val `float` The float to write
+         * @return `status_utils::StatusCode` OK if successful, FAILED otherwise 
+         */
+        status_utils::StatusCode write_to_register(uint8_t reg, float val);
 
-        StatusCode write_to_register(uint8_t reg, float val){
-            std::vector<uint8_t> data = I2C::float_to_bytes(val);
-            data.insert(data.begin(), reg);
 
-            return write(data);
-        }
+        /**
+         * @brief Read the specified number of bytes from the device
+         * 
+         * @param num_bytes `size_t` The number of bytes
+         * @return `status_utils::StatusedValue<std::vector<uint8_t>>` The bytes read 
+         */
+        status_utils::StatusedValue<std::vector<uint8_t>> read(size_t num_bytes);
 
-        StatusedValue<std::vector<uint8_t>> read(size_t num_bytes){
-            return I2C::read_bus(&device, num_bytes);
-        }
+        
+        /**
+         * @brief Read a float from the device
+         * 
+         * @return `status_utils::StatusedValue<float>` The float read 
+         */
+        status_utils::StatusedValue<float> read();
 
-        StatusedValue<float> read(){
-            return I2C::read_bus(&device);
-        }
+        
+        /**
+         * @brief Write a byte to the device
+         * 
+         * @param write `uint8_t` The byte to write 
+         * @return `status_utils::StatusCode` OK if successful, FAILED otherwise 
+         */
+        status_utils::StatusCode write(uint8_t write);
 
-        StatusCode write(uint8_t write){
-            return I2C::write_bus(&device, write);
-        }
 
-        StatusCode write(std::vector<uint8_t>& write){
-            return I2C::write_bus(&device, write);
-        }
+        /**
+         * @brief Write a vector of bytes to the bus
+         * 
+         * @param write `std::vector<uint8_t>&` The vector of bytes to write
+         * @return `status_utils::StatusCode` OK if successful, FAILED otherwise 
+         */
+        status_utils::StatusCode write(std::vector<uint8_t>& write);
 
-        StatusCode write(float data){
-            return I2C::write_bus(&device, data);
-        }
+
+        /**
+         * @brief Write a float to the device
+         * 
+         * @param data `float` The float to write
+         * @return `status_utils::StatusCode` OK if successful, FAILED otherwise 
+         */
+        status_utils::StatusCode write(float data);
 
     private:
 

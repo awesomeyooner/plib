@@ -26,7 +26,7 @@ class I2C{
 
     public:
 
-        static int bus;
+        static int m_bus;
 
         /**
          * @brief Initialize the i2c bus with the device path

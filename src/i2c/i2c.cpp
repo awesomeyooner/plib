@@ -2,17 +2,17 @@
 
 namespace fs = std::filesystem;
 
-// Default the bus to negative, indicating it has not been initialized
-int I2C::bus = -1;
+// Default the m_bus to negative, indicating it has not been initialized
+int I2C::m_bus = -1;
 
 
 status_utils::StatusCode I2C::init(const char* name)
 {
-    // Open the i2c bus and store the bus number in the variable
-    bus = i2c_open(name);
+    // Open the i2c m_bus and store the m_bus number in the variable
+    m_bus = i2c_open(name);
 
-    // if the bus is -1 then return as FAILED, if not, return OK
-    if(bus == -1)
+    // if the m_bus is -1 then return as FAILED, if not, return OK
+    if(m_bus == -1)
         return status_utils::StatusCode::FAILED;
     else
         return status_utils::StatusCode::OK;
@@ -30,7 +30,7 @@ status_utils::StatusCode I2C::init(int adapter_number)
 status_utils::StatusCode I2C::init_name(std::string name, bool verbose)
 {
     // The path where all the i2c folders are in
-    const fs::path i2c_path = "/sys/bus/i2c/devices";
+    const fs::path i2c_path = "/sys/m_bus/i2c/devices";
 
     // For every folder within the main path, check the names match
     // the given name. If it does, use that adapter and return OK
@@ -40,8 +40,8 @@ status_utils::StatusCode I2C::init_name(std::string name, bool verbose)
         std::string directory_name = entry.path().filename().string();
 
         // If it's not an i2c device then skip
-        if(directory_name.compare(0, 4, "i2c-") != 0){
-
+        if(directory_name.compare(0, 4, "i2c-") != 0)
+        {
             // Found folder but it's not an i2c device, skip
             if(verbose)
                 Logger::info("Found Folder: " + directory_name + "... " + "Not an i2c Device! Skipping...");
@@ -93,15 +93,16 @@ status_utils::StatusCode I2C::init_name(std::string name, bool verbose)
             continue;
 
         // If the name matches the one specified, initialize with that adapter number
-        if(adapter_name.find(name) != std::string::npos){
-
+        if(adapter_name.find(name) != std::string::npos)
+        {
             // Tell the user that the adapter has been found
             if(verbose)
                 Logger::info("Found adapter " + adapter_name + " in: " + directory_name);
 
             return init(adapter_number);
         }
-        else{
+        else
+        {
             // If it's not the right one then just skip
             if(verbose)
                 Logger::info("Not the right adapter! Skipping...");
@@ -117,8 +118,8 @@ status_utils::StatusCode I2C::init_name(std::string name, bool verbose)
 
 int I2C::get_bus()
 {
-    return bus;
-} // end of "get_bus"
+    return m_bus;
+} // end of "get_m_bus"
 
 
 float I2C::bytes_to_float(std::vector<uint8_t> v_bytes)
@@ -161,7 +162,7 @@ status_utils::StatusedValue<std::vector<uint8_t>> I2C::read_bus(i2c_device* devi
     // Create an empty array to store the bytes
     uint8_t buffer[num_bytes] = {};
 
-    // Read the bus and store it in `buffer` 
+    // Read the m_bus and store it in `buffer` 
     // If it returns the number of requested bytes, it worked (OK), if not, it failed (FAILED)
     status_utils::StatusCode status = i2c_read(device, 0, buffer, num_bytes) == num_bytes ? status_utils::StatusCode::OK : status_utils::StatusCode::FAILED;
 
@@ -171,7 +172,7 @@ status_utils::StatusedValue<std::vector<uint8_t>> I2C::read_bus(i2c_device* devi
     // Return the vector and status
     return status_utils::StatusedValue<std::vector<uint8_t>>(vec, status);
 
-} // end of "read_bus"
+} // end of "read_m_bus"
 
 
 status_utils::StatusedValue<float> I2C::read_bus(i2c_device* device)
@@ -179,7 +180,7 @@ status_utils::StatusedValue<float> I2C::read_bus(i2c_device* device)
     // The number of bytes in a `float`
     size_t float_size = sizeof(float);
 
-    // Read 4 bytes from the bus
+    // Read 4 bytes from the m_bus
     status_utils::StatusedValue<std::vector<uint8_t>> read = read_bus(device, float_size);
 
     // Convert Byte Vector to Float
@@ -188,7 +189,7 @@ status_utils::StatusedValue<float> I2C::read_bus(i2c_device* device)
     // Return the float and status
     return status_utils::StatusedValue<float>(value, read.status);
     
-} // end of "read_bus"
+} // end of "read_m_bus"
 
 
 status_utils::StatusCode I2C::write_bus(i2c_device* device, std::vector<uint8_t>& write)
@@ -203,18 +204,18 @@ status_utils::StatusCode I2C::write_bus(i2c_device* device, std::vector<uint8_t>
     return i2c_write(device, 0, buffer, write.size()) == write.size() ? 
         status_utils::StatusCode::OK : status_utils::StatusCode::FAILED;
 
-} // end of "write_bus"
+} // end of "write_m_bus"
 
 
 status_utils::StatusCode I2C::write_bus(i2c_device* device, uint8_t write)
 {
-    // Store the byte into a vector so we can use the original `write_bus` method
+    // Store the byte into a vector so we can use the original `write_m_bus` method
     std::vector data = {write};
 
-    // Call the `write_bus` method
+    // Call the `write_m_bus` method
     write_bus(device, data);
 
-} // end of "write_bus"
+} // end of "write_m_bus"
 
 
 status_utils::StatusCode I2C::write_bus(i2c_device* device, float data)
@@ -225,4 +226,4 @@ status_utils::StatusCode I2C::write_bus(i2c_device* device, float data)
     // Write the array to the device
     return write_bus(device, bytes);
     
-} // end of "write_bus"
+} // end of "write_m_bus"

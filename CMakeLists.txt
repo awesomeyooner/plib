@@ -9,6 +9,7 @@ add_library(plib
     src/util/util.cpp
 
     src/i2c/i2c.cpp
+    src/i2c/wire_device.cpp
 )
 
 target_include_directories(plib

@@ -2,6 +2,7 @@
 
 #include "plib/util/util.hpp"
 #include "plib/i2c/i2c.hpp"
+#include "plib/i2c/wire_device.hpp"
 
 int main()
 {

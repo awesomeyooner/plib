@@ -4,6 +4,7 @@ project( plib LANGUAGES CXX )
 
 add_library(plib
     src/util/logger.cpp
+    src/util/status.cpp
 )
 
 target_include_directories(plib

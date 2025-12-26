@@ -7,6 +7,8 @@ add_library(plib
     src/util/status.cpp
     src/util/gnu_plotter.cpp
     src/util/util.cpp
+
+    src/i2c/i2c.cpp
 )
 
 target_include_directories(plib
@@ -15,7 +17,7 @@ target_include_directories(plib
         $<INSTALL_INTERFACE:include>
 )
 
-target_compile_features(plib PUBLIC cxx_std_20)
+target_compile_features(plib PUBLIC cxx_std_17)
 
 add_executable(Test test/test.cpp)
 target_link_libraries(Test PRIVATE plib)

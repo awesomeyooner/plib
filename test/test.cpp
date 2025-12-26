@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "plib/util/util.hpp"
-
+#include "plib/i2c/i2c.hpp"
 
 int main()
 {

@@ -21,167 +21,119 @@ union FloatsBytesConverter{
     float f_value;
     uint8_t bytes[4];
 } f_to_b;
+
 class I2C{
 
     public:
 
         static int bus;
 
-        static status_utils::StatusCode init(const char* name = "/dev/i2c-9"){
-            bus = i2c_open(name);
+        /**
+         * @brief Initialize the i2c bus with the device path
+         * 
+         * @param name `char*` Default `"/dev/i2c-9"` - The i2c device path
+         * @return `status_utils::StatusCode` The Status, OK if properly initialized, FAILED otherwise 
+         */
+        static status_utils::StatusCode init(const char* name = "/dev/i2c-9");
 
-            if(bus == -1)
-                return status_utils::StatusCode::FAILED;
-            else
-                return status_utils::StatusCode::OK;
-        }
 
-        static status_utils::StatusCode init(int adapter_number){
-            std::string name = "/dev/i2c-" + std::to_string(adapter_number);
+        /**
+         * @brief Initialize the i2c bus with the device number
+         * 
+         * @param adapter_number `int` The device number, found in `"/dev/i2c-<num>"`
+         * @return `status_utils::StatusCode` OK if found, FAILED otherwise
+         */
+        static status_utils::StatusCode init(int adapter_number);
 
-            return init(name.c_str());
-        }
 
-        static status_utils::StatusCode init_name(std::string name, bool verbose = false){
-            const fs::path i2c_path = "/sys/bus/i2c/devices";
+        /**
+         * @brief Initialize the i2c bus with the device name
+         * 
+         * @param name `std::string` The device name
+         * @param verbose `bool` Default `false` - Displays the finding process if true
+         * @return `status_utils::StatusCode` OK if it found the adapter, FAILED otherwise 
+         */
+        static status_utils::StatusCode init_name(std::string name, bool verbose = false);
 
-            for(auto entry : fs::directory_iterator(i2c_path)){
-                std::string directory_name = entry.path().filename().string();
 
-                // If it's not an i2c device then skip
-                if(directory_name.compare(0, 4, "i2c-") != 0){
+        /**
+         * @brief Get the bus number
+         * 
+         * @return `int` the bus number 
+         */
+        static int get_bus();
 
-                    if(verbose)
-                        Logger::info("Found Folder: " + directory_name + "... " + "Not an i2c Device! Skipping...");
 
-                    continue;
-                }
+        /**
+         * @brief Convert a vector of 4 bytes into a float
+         * 
+         * @param v_bytes `std::vector<uint8_t>` Vector full of bytes
+         * @return `float` The float equivalent 
+         */
+        static float bytes_to_float(std::vector<uint8_t> v_bytes);
 
-                int adapter_number;
-                
-                try{
-                    adapter_number = std::stoi(directory_name.substr(4));
-                }
-                catch(std::exception& e){
 
-                    if(verbose)
-                        Logger::info("Found Folder: " + directory_name + "... " + "Not a proper adapter! Skipping...");
+        /**
+         * @brief Convert a float into a vector of 4 bytes
+         * 
+         * @param value `float` The float to convert
+         * @return `std::vector<uint8_t>` The vector full of bytes 
+         */
+        static std::vector<uint8_t> float_to_bytes(float value);
 
-                    continue;
-                }
+        
+        /**
+         * @brief Read a specific number of bytes from the bus
+         * 
+         * @param device `i2c_device*` The i2c device to read from
+         * @param num_bytes `size_t` The number of bytes to read
+         * @return `status_utils::StatusedValue<std::vector<uint8_t>>` Vector full of bytes that it read with status 
+         */
+        static status_utils::StatusedValue<std::vector<uint8_t>> read_bus(i2c_device* device, size_t num_bytes);
+        
 
-                auto name_file = entry.path() / "name";
+        /**
+         * @brief Read a float from the bus. Simply just reads 4 bytes and converts it to a float
+         * 
+         * @param device `i2c_device*` The i2c device to read from
+         * @return `status_utils::StatusedValue<float>` The float and status 
+         */
+        static status_utils::StatusedValue<float> read_bus(i2c_device* device);
 
-                if(!fs::is_regular_file(name_file))
-                    continue;
 
-                std::ifstream file(name_file);
+        /**
+         * @brief Write a vector of bytes to a device
+         * 
+         * @param device `i2c_device*` The i2c device to write to
+         * @param write `std::vector<uint8_t>&` The vector of bytes
+         * @return `status_utils::StatusCode` OK if it was successful, FAILED otherwise 
+         */
+        static status_utils::StatusCode write_bus(i2c_device* device, std::vector<uint8_t>& write);
 
-                if(!file.is_open())
-                    continue;
 
-                std::string adapter_name;
+        /**
+         * @brief Write a single byte to a device
+         * 
+         * @param device `i2c_device*` The i2c device to write to
+         * @param write `uint8_t` The byte to write
+         * @return `status_utils::StatusCode` OK if it was successful, FAILED otherwise 
+         */
+        static status_utils::StatusCode write_bus(i2c_device* device, uint8_t write);
 
-                std::getline(file, adapter_name);
+        
+        /**
+         * @brief Write a float (4 bytes) to a device
+         * 
+         * @param device `i2c_device` The i2c device to write to
+         * @param data `float` The float to write
+         * @return `status_utils::StatusCode` OK if it was successful, FAILED otherwise  
+         */
+        static status_utils::StatusCode write_bus(i2c_device* device, float data);
 
-                if(adapter_name.empty())
-                    continue;
-
-                // do something with name and number
-
-                // if the name is found
-                if(adapter_name.find(name) != std::string::npos){
-
-                    if(verbose)
-                        Logger::info("Found adapter " + adapter_name + " in: " + directory_name);
-
-                    return init(adapter_number);
-                }
-                else{
-                    if(verbose)
-                        Logger::info("Not the right adapter! Skipping...");
-                }
-            }
-
-            return status_utils::StatusCode::FAILED;
-        }
-
-        static int get_bus(){
-            return bus;
-        }
-
-        static float bytes_to_float(std::vector<uint8_t> v_bytes){
-            f_to_b.bytes[0] = v_bytes.at(0);
-            f_to_b.bytes[1] = v_bytes.at(1);
-            f_to_b.bytes[2] = v_bytes.at(2);
-            f_to_b.bytes[3] = v_bytes.at(3);
-
-            return f_to_b.f_value;
-        }
-
-        static std::vector<uint8_t> float_to_bytes(float value){
-            f_to_b.f_value = value;
-
-            std::vector<uint8_t> bytes(
-                {
-                    f_to_b.bytes[0],
-                    f_to_b.bytes[1],
-                    f_to_b.bytes[2],
-                    f_to_b.bytes[3]
-                }
-            );
-
-            return bytes;
-        }
-
-        static status_utils::StatusedValue<std::vector<uint8_t>> read_bus(i2c_device* device, size_t num_bytes){
-            uint8_t buffer[num_bytes] = {};
-
-            status_utils::StatusCode status = i2c_read(device, 0, buffer, num_bytes) == num_bytes ? status_utils::StatusCode::OK : status_utils::StatusCode::FAILED;
-
-            std::vector<uint8_t> vec(buffer, buffer + num_bytes);
-
-            return status_utils::StatusedValue<std::vector<uint8_t>>(vec, status);
-        }
-
-        static status_utils::StatusedValue<float> read_bus(i2c_device* device){
-            size_t float_size = sizeof(float);
-
-            // Get the byte vector
-            status_utils::StatusedValue<std::vector<uint8_t>> read = read_bus(device, float_size);
-
-            // Convert Byte Vector to Float
-            float value = bytes_to_float(read.value);
-
-            return status_utils::StatusedValue<float>(value, read.status);
-        }
-
-        static status_utils::StatusCode write_bus(i2c_device* device, uint8_t write){
-            std::vector data = {write};
-
-            write_bus(device, data);
-        }
-
-        static status_utils::StatusCode write_bus(i2c_device* device, std::vector<uint8_t>& write){
-            uint8_t buffer[write.size()];
-
-            std::copy(write.begin(), write.end(), buffer);
-
-            return i2c_write(device, 0, buffer, write.size()) == write.size() ? status_utils::StatusCode::OK : status_utils::StatusCode::FAILED;
-        }
-
-        static status_utils::StatusCode write_bus(i2c_device* device, float data){
-            
-            // Convert Float to Byte Array
-            std::vector<uint8_t> bytes = float_to_bytes(data);
-
-            return write_bus(device, bytes);
-        }
 
     private:
 
 }; // class I2C
 
-int I2C::bus = -1;
 
 #endif // I2C_HPP

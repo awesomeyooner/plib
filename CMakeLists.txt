@@ -16,3 +16,6 @@ target_include_directories(plib
 )
 
 target_compile_features(plib PUBLIC cxx_std_20)
+
+add_executable(Test test/test.cpp)
+target_link_libraries(Test PRIVATE plib)

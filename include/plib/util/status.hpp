@@ -8,7 +8,7 @@
 
 namespace status_utils{
 
-    
+
 enum class StatusCode{
     OK,     // Use when the situation is what it's supposed to be
     ERROR,  // Use when the situation fails in an unexpected way 
@@ -58,7 +58,25 @@ struct StatusedValue{
      * 
      * @return `bool` True if the status is OK
      */
-    bool is_OK();
+    bool is_OK()
+    {
+        // Return true if the status is OK
+        return status == StatusCode::OK;
+
+    } // end of "is_OK"
+
+    
+    /**
+     * @brief Gets the status as a string
+     * 
+     * @return `std::string` The string representation 
+     */
+    std::string to_string()
+    {
+        // Return the string representation
+        return status_utils::status_to_string(status);
+
+    } // end of "to_string"
 
 }; // struct StatusedValue
 

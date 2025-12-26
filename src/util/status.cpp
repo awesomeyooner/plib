@@ -2,7 +2,7 @@
 
 namespace status_utils{
 
-    
+
 std::string status_to_string(StatusCode status)
 {
     std::string output = "";
@@ -48,15 +48,6 @@ void print_status(StatusCode status)
     // Print text
     std::cout << text << std::endl;
 } // end of "print_status"
-
-
-template<typename T>
-
-bool StatusedValue<T>::is_OK()
-{
-    // Return true if the status is OK
-    return status == StatusCode::OK;
-} // end of "is_OK"
 
 
 } // namespace status_utils

@@ -16,6 +16,27 @@ void print(std::string text, bool should_end_line)
 } // end of "print"
 
 
+void print(double value, bool should_end_line)
+{
+    print(to_string(value), should_end_line);
+
+} // end of "print"
+
+
+void print(float value, bool should_end_line)
+{
+    print(to_string(value), should_end_line);
+
+} // end of "print"
+
+
+void print(int value, bool should_end_line)
+{
+    print(to_string(value), should_end_line);
+
+} // end of "print"
+
+
 void print(std::vector<std::string> texts, bool should_end_line)
 {
     // Store the combined texts into this variable

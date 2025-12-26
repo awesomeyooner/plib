@@ -23,6 +23,33 @@ void print(std::string text, bool should_end_line = true);
 
 
 /**
+ * @brief Send a number to the terminal using `std::cout`
+ * 
+ * @param text `double` The text to send
+ * @param should_end_line `bool` Whether or not to end the line
+ */
+void print(double text, bool should_end_line = true);
+
+
+/**
+ * @brief Send text to the terminal using `std::cout`
+ * 
+ * @param value `float` The text to send
+ * @param should_end_line `bool` Whether or not to end the line
+ */
+void print(float value, bool should_end_line = true);
+
+
+/**
+ * @brief Send a number to the terminal using `std::cout`
+ * 
+ * @param value `int` The text to send
+ * @param should_end_line `bool` Whether or not to end the line
+ */
+void print(int value, bool should_end_line = true);
+
+
+/**
  * @brief Combines all strings within `texts` into one string
  * and sends it to the terminal
  * 
@@ -119,7 +146,6 @@ status_utils::StatusedValue<int> get_user_input_int(
     bool persistent = false, 
     std::string error_message = "Sorry, please try again: ");
 
-    
 } // namespace util
 
 #endif // UTIL_HPP

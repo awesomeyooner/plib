@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <functional>
 
-#include "util/status.hpp"
+#include "plib/util/status.hpp"
 
 enum class CommandType : uint8_t{
     
@@ -65,7 +65,7 @@ enum class RequestType : uint8_t{
 struct Command{
     uint8_t reg; // register byte
     int length; // payload to recieve length
-    std::function<StatusCode(std::vector<uint8_t>*)> runnable; // what to run when register is called
+    std::function<status_utils::StatusCode(std::vector<uint8_t>*)> runnable; // what to run when register is called
 
 }; // struct Command
 
@@ -74,7 +74,7 @@ struct Command{
 struct Request{
     uint8_t reg; // register byte
     int length; // payload to send length
-    std::function<StatusCode()> runnable; // what to run when register is called
+    std::function<status_utils::StatusCode()> runnable; // what to run when register is called
 }; // struct Request
 
 #endif // WIRE_TYPES_HPP

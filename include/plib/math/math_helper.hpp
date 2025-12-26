@@ -23,6 +23,15 @@ namespace math{
         return input;
     }
 
+    double roundToDecimal(double input, int decimals = 2){
+        double powerOfTen = pow(10, decimals);
+        
+        double rounded = std::round(input * powerOfTen) / powerOfTen;
+
+        return rounded;
+
+    }
+
 } // namespace math
 
 namespace conversions{

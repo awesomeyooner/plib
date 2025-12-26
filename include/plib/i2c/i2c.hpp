@@ -12,8 +12,8 @@
 #include <fstream>
 #include <filesystem>
 #include <system_error>
-#include "util/logger.hpp"
-#include "util/status.hpp"
+#include "plib/util/logger.hpp"
+#include "plib/util/status.hpp"
 
 namespace fs = std::filesystem;
 
@@ -27,22 +27,22 @@ class I2C{
 
         static int bus;
 
-        static StatusCode init(const char* name = "/dev/i2c-9"){
+        static status_utils::StatusCode init(const char* name = "/dev/i2c-9"){
             bus = i2c_open(name);
 
             if(bus == -1)
-                return StatusCode::FAILED;
+                return status_utils::StatusCode::FAILED;
             else
-                return StatusCode::OK;
+                return status_utils::StatusCode::OK;
         }
 
-        static StatusCode init(int adapter_number){
+        static status_utils::StatusCode init(int adapter_number){
             std::string name = "/dev/i2c-" + std::to_string(adapter_number);
 
             return init(name.c_str());
         }
 
-        static StatusCode init_name(std::string name, bool verbose = false){
+        static status_utils::StatusCode init_name(std::string name, bool verbose = false){
             const fs::path i2c_path = "/sys/bus/i2c/devices";
 
             for(auto entry : fs::directory_iterator(i2c_path)){
@@ -103,7 +103,7 @@ class I2C{
                 }
             }
 
-            return StatusCode::FAILED;
+            return status_utils::StatusCode::FAILED;
         }
 
         static int get_bus(){
@@ -134,43 +134,43 @@ class I2C{
             return bytes;
         }
 
-        static StatusedValue<std::vector<uint8_t>> read_bus(i2c_device* device, size_t num_bytes){
+        static status_utils::StatusedValue<std::vector<uint8_t>> read_bus(i2c_device* device, size_t num_bytes){
             uint8_t buffer[num_bytes] = {};
 
-            StatusCode status = i2c_read(device, 0, buffer, num_bytes) == num_bytes ? StatusCode::OK : StatusCode::FAILED;
+            status_utils::StatusCode status = i2c_read(device, 0, buffer, num_bytes) == num_bytes ? status_utils::StatusCode::OK : status_utils::StatusCode::FAILED;
 
             std::vector<uint8_t> vec(buffer, buffer + num_bytes);
 
-            return StatusedValue<std::vector<uint8_t>>(vec, status);
+            return status_utils::StatusedValue<std::vector<uint8_t>>(vec, status);
         }
 
-        static StatusedValue<float> read_bus(i2c_device* device){
+        static status_utils::StatusedValue<float> read_bus(i2c_device* device){
             size_t float_size = sizeof(float);
 
             // Get the byte vector
-            StatusedValue<std::vector<uint8_t>> read = read_bus(device, float_size);
+            status_utils::StatusedValue<std::vector<uint8_t>> read = read_bus(device, float_size);
 
             // Convert Byte Vector to Float
             float value = bytes_to_float(read.value);
 
-            return StatusedValue<float>(value, read.status);
+            return status_utils::StatusedValue<float>(value, read.status);
         }
 
-        static StatusCode write_bus(i2c_device* device, uint8_t write){
+        static status_utils::StatusCode write_bus(i2c_device* device, uint8_t write){
             std::vector data = {write};
 
             write_bus(device, data);
         }
 
-        static StatusCode write_bus(i2c_device* device, std::vector<uint8_t>& write){
+        static status_utils::StatusCode write_bus(i2c_device* device, std::vector<uint8_t>& write){
             uint8_t buffer[write.size()];
 
             std::copy(write.begin(), write.end(), buffer);
 
-            return i2c_write(device, 0, buffer, write.size()) == write.size() ? StatusCode::OK : StatusCode::FAILED;
+            return i2c_write(device, 0, buffer, write.size()) == write.size() ? status_utils::StatusCode::OK : status_utils::StatusCode::FAILED;
         }
 
-        static StatusCode write_bus(i2c_device* device, float data){
+        static status_utils::StatusCode write_bus(i2c_device* device, float data){
             
             // Convert Float to Byte Array
             std::vector<uint8_t> bytes = float_to_bytes(data);

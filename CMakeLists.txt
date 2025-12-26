@@ -3,8 +3,7 @@ cmake_minimum_required(VERSION 3.12)
 project( plib LANGUAGES CXX )
 
 add_library(plib
-    src/...
-    src/......
+    src/util/logger.cpp
 )
 
 target_include_directories(plib

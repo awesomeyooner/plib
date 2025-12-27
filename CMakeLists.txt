@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.12)
 
 project( plib LANGUAGES CXX )
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+find_package(OpenGL REQUIRED)
+find_package(SDL2 REQUIRED)
+
 # === Main Library ===
 add_library(plib
     src/util/logger.cpp
@@ -12,27 +17,42 @@ add_library(plib
     src/i2c/i2c.cpp
     src/i2c/wire_device.cpp
 
-    # ImGUI
+    # ImGUI Core
     lib/imgui/imgui_demo.cpp
     lib/imgui/imgui_draw.cpp
     lib/imgui/imgui_tables.cpp
     lib/imgui/imgui_widgets.cpp
     lib/imgui/imgui.cpp
 
+    # ImGUI Backend
+    lib/imgui/backends/imgui_impl_opengl3.cpp
+    lib/imgui/backends/imgui_impl_sdl2.cpp
+
     # ImPlot
     lib/implot/implot_demo.cpp
     lib/implot/implot_items.cpp
     lib/implot/implot.cpp
-
 )
 
 target_include_directories(plib
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib>
+        $<INSTALL_INTERFACE:lib>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/imgui>
+        $<INSTALL_INTERFACE:lib/imgui>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/implot>
+        $<INSTALL_INTERFACE:lib/implot>
+
+        ${SDL2_INCLUDE_DIRS}
 )
 
 target_compile_features(plib PUBLIC cxx_std_17)
 
 add_executable(Test test/test.cpp)
-target_link_libraries(Test PRIVATE plib)
+target_link_libraries(Test PRIVATE 
+    plib 
+    OpenGL::GL
+    SDL2::SDL2 
+)

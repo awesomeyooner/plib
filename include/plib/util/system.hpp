@@ -80,6 +80,25 @@ class System{
         static double get_time_since_start();
 
 
+        /**
+         * @brief Get a formatted string of the current date and time in the following order: year, month
+         * , day, hour, min, sec
+         * 
+         * @param unit_seperator `std::string` The string to use between each unit, like betweent the year, month, and day 
+         * @param gap `std::string` The string to use between the calender date and clock time
+         * @return `std::string` The formatted date and time string 
+         */
+        static std::string get_date_time(std::string unit_seperator = ":", std::string gap = "_");
+
+        
+        /**
+         * @brief Gets the datetime object
+         * 
+         * @return `tm*` The datetime object 
+         */
+        static tm* get_tm();
+
+
     private:
 
         // Flag to keep any threads or main programs alive

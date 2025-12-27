@@ -17,8 +17,6 @@
 
 int main()
 {
-    double time = System::get_time_since_start();
-    util::print(time);
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
     {

@@ -1,6 +1,5 @@
 #include "plib/util/gnu_plotter.hpp"
 
-std::chrono::_V2::system_clock::time_point Plotter::m_start;
 FILE* Plotter::m_gnuplot;
 
 
@@ -10,9 +9,6 @@ status_utils::StatusCode Plotter::initialize(
     std::string x_label,
     std::string y_label)
 {
-    // Set the start time to now
-    m_start = std::chrono::high_resolution_clock::now();
-
     // Open the m_gnuplot pipe (it's a file) with write permissions
     m_gnuplot = popen("m_gnuplot", "w");
 
@@ -38,36 +34,6 @@ status_utils::StatusCode Plotter::initialize(
 } // end of "initialize"
 
 
-std::chrono::_V2::system_clock::time_point Plotter::get_timepoint()
-{
-    return std::chrono::high_resolution_clock::now();
-
-} // end of "get_timepoint"
-
-
-double Plotter::timepoint_to_double(std::chrono::_V2::system_clock::time_point timepoint)
-{
-    return std::chrono::duration_cast<std::chrono::duration<double>>(timepoint.time_since_epoch()).count();
-
-} // end of "timepoint_to_double"
-
-
-double Plotter::get_time_difference(
-    std::chrono::_V2::system_clock::time_point initial,
-    std::chrono::_V2::system_clock::time_point final)
-{
-    // Return the time difference 
-    return std::chrono::duration_cast<std::chrono::duration<double>>(initial - final).count();
-} // end of "get_time_difference"
-
-
-double Plotter::get_time_since_start()
-{
-    return get_time_difference(m_start, get_timepoint());
-
-} // end of "get_time_since_start"
-
-
 void Plotter::push_data(std::string time, std::string data)
 {
     // Open `data.txt` without recreating it
@@ -85,7 +51,7 @@ void Plotter::push_data(std::string time, std::string data)
 void Plotter::push_data(std::string data)
 {
     // Automatically fill in time as the time since start
-    push_data(util::to_string(get_time_since_start()), data);
+    push_data(util::to_string(System::get_time_since_start()), data);
 
 } // end of "push_data"
 
@@ -93,7 +59,7 @@ void Plotter::push_data(std::string data)
 void Plotter::push_data(double data)
 {
     // Automatically fill in time as time since start and convert data to string
-    push_data(util::to_string(get_time_since_start()), util::to_string(data));
+    push_data(util::to_string(System::get_time_since_start()), util::to_string(data));
 
 } // end of "push_data"
 
@@ -101,7 +67,7 @@ void Plotter::push_data(double data)
 void Plotter::push_data(float data)
 {
     // Automatically fill in time as time since start and convert data to string
-    push_data(util::to_string(get_time_since_start()), util::to_string(data));
+    push_data(util::to_string(System::get_time_since_start()), util::to_string(data));
 
 } // end of "push_data"
 
@@ -109,7 +75,7 @@ void Plotter::push_data(float data)
 void Plotter::push_data(int data)
 {
     // Automatically fill in time as time since start and convert data to string
-    push_data(util::to_string(get_time_since_start()), util::to_string(data));
+    push_data(util::to_string(System::get_time_since_start()), util::to_string(data));
 
 } // end of "push_
 
@@ -118,7 +84,7 @@ void Plotter::plot_with_range(double x_axis_width)
 {
     // Set the range from (now - width) to now
     std::string range_cmd = "set xrange [";
-    range_cmd += std::to_string(get_time_since_start() - x_axis_width) + " : " + std::to_string(get_time_since_start()) + "]\n";
+    range_cmd += std::to_string(System::get_time_since_start() - x_axis_width) + " : " + std::to_string(System::get_time_since_start()) + "]\n";
     fprintf(m_gnuplot, range_cmd.c_str());
     fprintf(m_gnuplot, "plot 'data.txt' using 1:2 with lines title 'Y Axis'\n");
     fflush(m_gnuplot);
@@ -160,7 +126,7 @@ void Plotter::plot(std::string time, std::string data)
 void Plotter::plot(std::string data)
 {
     // Plot with time autofilled
-    plot_with_range(util::to_string(get_time_since_start()), data);
+    plot_with_range(util::to_string(System::get_time_since_start()), data);
 
 } // end of "plot"
 

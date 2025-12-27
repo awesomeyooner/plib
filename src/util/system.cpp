@@ -48,6 +48,9 @@ double System::get_time_difference(
 
 double System::get_time_since_start()
 {
-    return get_time_difference(m_start, get_timepoint());
+    return get_time_difference(get_timepoint(), m_start);
 
 } // end of "get_time_since_start"
+
+bool System::m_keep_alive = true;
+std::chrono::_V2::system_clock::time_point System::m_start = System::get_timepoint();

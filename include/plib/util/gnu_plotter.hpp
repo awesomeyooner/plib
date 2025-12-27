@@ -14,14 +14,12 @@
 
 #include "util.hpp"
 #include "status.hpp"
+#include "system.hpp"
 
 class Plotter{
 
     public:
 
-        // The starting timepoint to know where 0 seconds is
-        static std::chrono::_V2::system_clock::time_point m_start;
-        
         // The GNUPlot pipe object
         static FILE* m_gnuplot;
 
@@ -40,43 +38,6 @@ class Plotter{
             std::string plot_name = "Plot", 
             std::string x_label = "X Axis", 
             std::string y_label = "Y Axis");
-
-        /**
-         * @brief Gets the current timepoint as `std::chrono::_V2::system_clock::time_point`
-         * 
-         * @return `std::chrono::_V2::system_clock::time_point` The timepoint 
-         */
-        static std::chrono::_V2::system_clock::time_point get_timepoint();
-
-
-        /**
-         * @brief Converts `std::chrono::_V2::system_clock::time_point` to `double`
-         * 
-         * @param timepoint `std::chrono::_V2::system_clock::time_point` The timepoint to convert 
-         * @return `double` The double representation of the timepoint
-         */
-        static double timepoint_to_double(std::chrono::_V2::system_clock::time_point timepoint);
-
-
-        /**
-         * @brief Gets the time difference between two `std::chrono::_V2::system_clock::time_point`
-         * as a double
-         * 
-         * @param initial `std::chrono::_V2::system_clock::time_point` The initial timepoint
-         * @param final `std::chrono::_V2::system_clock::time_point` The final timepoint
-         * @return `double` The time difference as a double 
-         */
-        static double get_time_difference(
-            std::chrono::_V2::system_clock::time_point initial, 
-            std::chrono::_V2::system_clock::time_point final);
-
-
-        /**
-         * @brief Returns the current time since epoch
-         * 
-         * @return `double` Time since epoch in `seconds`
-         */
-        static double get_time_since_start();
 
 
         /**

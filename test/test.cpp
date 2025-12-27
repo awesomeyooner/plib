@@ -2,6 +2,7 @@
 #include <cstdio>
 
 #include "plib/util/util.hpp"
+#include "plib/util/system.hpp"
 #include "plib/i2c/i2c.hpp"
 #include "plib/i2c/wire_device.hpp"
 
@@ -16,6 +17,8 @@
 
 int main()
 {
+    double time = System::get_time_since_start();
+    util::print(time);
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
     {

@@ -13,6 +13,7 @@ add_library(plib
     src/util/status.cpp
     src/util/gnu_plotter.cpp
     src/util/util.cpp
+    src/util/system.cpp
 
     src/i2c/i2c.cpp
     src/i2c/wire_device.cpp

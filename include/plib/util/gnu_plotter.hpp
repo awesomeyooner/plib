@@ -1,5 +1,5 @@
-#ifndef PLOTTER_HPP
-#define PLOTTER_HPP
+#ifndef GNU_PLOTTER_HPP
+#define GNU_PLOTTER_HPP
 
 #include <string>
 #include <iostream>
@@ -16,7 +16,7 @@
 #include "status.hpp"
 #include "system.hpp"
 
-class Plotter{
+class GNUPlotter{
 
     public:
 
@@ -170,6 +170,6 @@ class Plotter{
     */
         
 
-}; // class Plotter
+}; // class GNUPlotter
 
-#endif // PLOTTER_HPP
+#endif // GNU_PLOTTER_HPP

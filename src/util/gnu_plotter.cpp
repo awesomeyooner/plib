@@ -1,9 +1,9 @@
 #include "plib/util/gnu_plotter.hpp"
 
-FILE* Plotter::m_gnuplot;
+FILE* GNUPlotter::m_gnuplot;
 
 
-status_utils::StatusCode Plotter::initialize(
+status_utils::StatusCode GNUPlotter::initialize(
     std::string window_name,
     std::string plot_name,
     std::string x_label,
@@ -34,7 +34,7 @@ status_utils::StatusCode Plotter::initialize(
 } // end of "initialize"
 
 
-void Plotter::push_data(std::string time, std::string data)
+void GNUPlotter::push_data(std::string time, std::string data)
 {
     // Open `data.txt` without recreating it
     std::ofstream file("data.txt", std::ios::app);
@@ -48,7 +48,7 @@ void Plotter::push_data(std::string time, std::string data)
 } // end of "push_data"
 
 
-void Plotter::push_data(std::string data)
+void GNUPlotter::push_data(std::string data)
 {
     // Automatically fill in time as the time since start
     push_data(util::to_string(System::get_time_since_start()), data);
@@ -56,7 +56,7 @@ void Plotter::push_data(std::string data)
 } // end of "push_data"
 
 
-void Plotter::push_data(double data)
+void GNUPlotter::push_data(double data)
 {
     // Automatically fill in time as time since start and convert data to string
     push_data(util::to_string(System::get_time_since_start()), util::to_string(data));
@@ -64,7 +64,7 @@ void Plotter::push_data(double data)
 } // end of "push_data"
 
 
-void Plotter::push_data(float data)
+void GNUPlotter::push_data(float data)
 {
     // Automatically fill in time as time since start and convert data to string
     push_data(util::to_string(System::get_time_since_start()), util::to_string(data));
@@ -72,7 +72,7 @@ void Plotter::push_data(float data)
 } // end of "push_data"
 
 
-void Plotter::push_data(int data)
+void GNUPlotter::push_data(int data)
 {
     // Automatically fill in time as time since start and convert data to string
     push_data(util::to_string(System::get_time_since_start()), util::to_string(data));
@@ -80,7 +80,7 @@ void Plotter::push_data(int data)
 } // end of "push_
 
 
-void Plotter::plot_with_range(double x_axis_width)
+void GNUPlotter::plot_with_range(double x_axis_width)
 {
     // Set the range from (now - width) to now
     std::string range_cmd = "set xrange [";
@@ -92,7 +92,7 @@ void Plotter::plot_with_range(double x_axis_width)
 } // end of "plot"
 
 
-void Plotter::plot_with_range(std::string time, std::string data, double x_axis_width)
+void GNUPlotter::plot_with_range(std::string time, std::string data, double x_axis_width)
 {
     // Push the data
     push_data(time, data);
@@ -103,7 +103,7 @@ void Plotter::plot_with_range(std::string time, std::string data, double x_axis_
 } // end of "plot"
 
 
-void Plotter::plot()
+void GNUPlotter::plot()
 {
     // Send the plot command to the pipe
     fprintf(m_gnuplot, "plot 'data.txt' using 1:2 with lines title 'Y Axis'\n");
@@ -112,7 +112,7 @@ void Plotter::plot()
 } // end of "plot"
 
 
-void Plotter::plot(std::string time, std::string data)
+void GNUPlotter::plot(std::string time, std::string data)
 {
     // Push the data
     push_data(time, data);
@@ -123,7 +123,7 @@ void Plotter::plot(std::string time, std::string data)
 } // end of "plot"
 
 
-void Plotter::plot(std::string data)
+void GNUPlotter::plot(std::string data)
 {
     // Plot with time autofilled
     plot_with_range(util::to_string(System::get_time_since_start()), data);
@@ -131,28 +131,28 @@ void Plotter::plot(std::string data)
 } // end of "plot"
 
 
-void Plotter::plot(double data)
+void GNUPlotter::plot(double data)
 {
     plot(util::to_string(data));
 
 } // end of "plot"
 
 
-void Plotter::plot(float data)
-{
-    plot(util::to_string(data));
-    
-} // end of "plot"
-
-
-void Plotter::plot(int data)
+void GNUPlotter::plot(float data)
 {
     plot(util::to_string(data));
     
 } // end of "plot"
 
 
-void Plotter::close()
+void GNUPlotter::plot(int data)
+{
+    plot(util::to_string(data));
+    
+} // end of "plot"
+
+
+void GNUPlotter::close()
 {
     pclose(m_gnuplot);
 }

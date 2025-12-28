@@ -3,6 +3,8 @@
 
 #include "plib/util/util.hpp"
 #include "plib/util/system.hpp"
+#include "plib/util/implot_plotter.hpp"
+
 #include "plib/i2c/i2c.hpp"
 #include "plib/i2c/wire_device.hpp"
 
@@ -59,8 +61,12 @@ int main()
     ImGui_ImplOpenGL3_Init("#version 330");
 
     // Keep alive
-    
     bool running = true;
+    
+    ImGui::ScrollingBuffer data;
+    float history = 10;
+    ImPlotAxisFlags flags = ImPlotAxisFlags_AutoFit; //ImPlotAxisFlags_NoTickLabels;
+
     while (running)
     {
         SDL_Event event;
@@ -78,12 +84,16 @@ int main()
         ImGui::Begin("Hello");
         ImGui::Text("ImGui + SDL2 + OpenGL works!");
 
-        double x_data[4] = {1, 2, 3, 4};
-        double y_data[4] = {1, 2, 3, 4};
+        ImGui::SliderFloat("History", &history, 1, 30, "%.3f s");
+
+        data.AddPoint(System::get_time_since_start(), sin(System::get_time_since_start()));
 
         if(ImPlot::BeginPlot("My Plot"))
         {
-            ImPlot::PlotLine("My Line Plot", x_data, y_data, 4);
+            ImPlot::SetupAxes("Time (s)", "Y Axis", flags, flags);
+            ImPlot::SetupAxisLimits(ImAxis_X1, System::get_time_since_start() - history, System::get_time_since_start(), ImGuiCond_Always);
+            // ImPlot::SetupAxisLimits(ImAxis_Y1, 0, 1);
+            ImPlot::PlotLine("My Line Plot", &data.Data[0].x, &data.Data[0].y, data.Data.size(), 0, data.Offset, 2*sizeof(float));
             ImPlot::EndPlot();
         }
 
@@ -111,4 +121,9 @@ int main()
     SDL_Quit();
 
     return 0;
+}
+
+void original()
+{
+
 }

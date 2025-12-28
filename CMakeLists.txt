@@ -12,6 +12,7 @@ add_library(plib
     src/util/logger.cpp
     src/util/status.cpp
     src/util/gnu_plotter.cpp
+    src/util/implot_plotter.cpp
     src/util/util.cpp
     src/util/system.cpp
 

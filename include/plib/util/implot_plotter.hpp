@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cstdio>
+#include <unordered_map>
 
 #include "plib/util/system.hpp"
 #include "plib/util/status.hpp"
@@ -96,16 +97,18 @@ class ImPlotter{
          * 
          * @param x_data `double` The X Axis value. Typically Time
          * @param y_data `double` The Y Axis value. Your actual data 
+         * @param name `std::string` Default `"My Line Plot"` - The name of the plot
          */
-        static void push_data(double x_data, double y_data);
+        static void push_data(double x_data, double y_data, std::string name = "My Line Plot");
 
 
         /**
          * @brief Push new data to the buffer with time automatically filled in
          * 
          * @param data `double` The data to plot
+         * @param name `std::string` Default `"My Line Plot"` - The name of the plot
          */
-        static void push_data(double data);
+        static void push_data(double data, std::string name = "My Line Plot");
 
         /**
          * @brief Shutdown ImGui and the backends
@@ -124,11 +127,21 @@ class ImPlotter{
         // History / Width of Plot
         static float m_history;
 
-        // Data Buffer
-        static ImGui::ScrollingBuffer m_data;
+        // Map of Data Buffer
+        static std::unordered_map<std::string, ImGui::ScrollingBuffer> m_data_map;
+        // static ImGui::ScrollingBuffer m_data;
 
         // Flags
         static ImPlotAxisFlags m_axis_flags;
+
+
+        /**
+         * @brief Initialize the Buffer at the specified name in the data map
+         * 
+         * @param name `std::string` - The name of the plot
+         * @return `ImGui::ScrollingBuffer` The buffer at `name`
+         */
+        static ImGui::ScrollingBuffer& initialize_data_map(std::string name);
 
 }; // class ImPlotter
 

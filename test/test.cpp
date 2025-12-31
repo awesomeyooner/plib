@@ -21,11 +21,12 @@ int main()
 {
     ImPlotter::initialize();
 
-    while(System::is_alive())
+    while (System::is_alive())
     {
-        ImPlotter::push_data(sin(System::get_time_since_start()));
+        ImPlotter::push_data(sin(System::get_time_since_start()), "My First Line Plot");
+        ImPlotter::push_data(cos(System::get_time_since_start()), "My Second Line Plot");
 
-        if(ImPlotter::update() == status_utils::StatusCode::FAILED)
+        if (ImPlotter::update() == status_utils::StatusCode::FAILED)
             System::shutdown();
     }
 

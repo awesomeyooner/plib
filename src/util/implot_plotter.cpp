@@ -77,7 +77,26 @@ status_utils::StatusCode ImPlotter::update()
         ImPlot::SetupAxes("Time (s)", "Y Axis", m_axis_flags, m_axis_flags);
         ImPlot::SetupAxisLimits(ImAxis_X1, System::get_time_since_start() - m_history, System::get_time_since_start(), ImGuiCond_Always);
         // ImPlot::SetupAxisLimits(ImAxis_Y1, 0, 1);
-        ImPlot::PlotLine("My Line Plot", &m_data.Data[0].x, &m_data.Data[0].y, m_data.Data.size(), 0, m_data.Offset, 2*sizeof(float));
+
+        // For every pair in the map, plot the data buffer
+        for(const auto& pair : m_data_map)
+        {
+            const char* name = pair.first.c_str();
+
+            ImGui::ScrollingBuffer data = pair.second;
+
+            ImPlot::PlotLine
+            (
+                name, 
+                &data.Data[0].x, 
+                &data.Data[0].y, 
+                data.Data.size(), 
+                0, // Flags
+                data.Offset, 
+                2*sizeof(float)
+            );
+        }
+
         ImPlot::EndPlot();
     }
 
@@ -97,18 +116,18 @@ status_utils::StatusCode ImPlotter::update()
 } // end of "update"
 
 
-void ImPlotter::push_data(double x_data, double y_data)
+void ImPlotter::push_data(double x_data, double y_data, std::string name)
 {
-    // Append the data point to the buffer
-    m_data.AddPoint(x_data, y_data);
+    // Push new data to the buffer at the specified name
+    initialize_data_map(name).AddPoint(x_data, y_data);
 
 } // end of "push_data"
 
 
-void ImPlotter::push_data(double data)
+void ImPlotter::push_data(double data, std::string name)
 {
     // Fill in X Axis value as time since start
-    push_data(System::get_time_since_start(), data);
+    push_data(System::get_time_since_start(), data, name);
     
 } // end of "push_data"
 
@@ -128,9 +147,24 @@ void ImPlotter::shutdown()
 } // end of "shutdown"
 
 
+ImGui::ScrollingBuffer& ImPlotter::initialize_data_map(std::string name)
+{
+    // Add a new ScrollingBuffer to the map. `try_emplace` already protects
+    // From the key already existing
+
+    ImGui::ScrollingBuffer buffer;
+
+    m_data_map.try_emplace(name, buffer);
+
+    // Return the buffer at `name`
+    return m_data_map.at(name);
+
+} // end of "initialize_data_map"
+
+
 SDL_Window* ImPlotter::m_window = nullptr;
 SDL_GLContext ImPlotter::m_gl_context = NULL;
 
 float ImPlotter::m_history = 10;
-ImGui::ScrollingBuffer ImPlotter::m_data;
+std::unordered_map<std::string, ImGui::ScrollingBuffer> ImPlotter::m_data_map;
 ImPlotAxisFlags ImPlotter::m_axis_flags = ImPlotAxisFlags_AutoFit;

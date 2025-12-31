@@ -6,7 +6,7 @@ bool Logger::m_should_write_to_file = false;
 
 bool Logger::initialize()
 {
-    std::string datetime = get_date_time("-", "_");
+    std::string datetime = System::get_date_time("-", "_");
     std::string file_name = "log_" + datetime + ".log";
     m_log_file.open("../logs/" + file_name);
 
@@ -47,17 +47,115 @@ void Logger::info(std::string text)
 } // end of "info"
 
 
+void Logger::info(std::vector<std::string> texts)
+{
+    // Log the text using `INFO` as the header
+    log("INFO", texts, m_should_write_to_file);
+
+} // end of "info"
+
+
+void Logger::info(double data)
+{
+    // Log the text using `INFO` as the header
+    log("INFO", data, m_should_write_to_file);
+    
+} // end of "info"
+
+
+void Logger::info(float data)
+{
+    // Log the text using `INFO` as the header
+    log("INFO", data, m_should_write_to_file);
+    
+} // end of "info"
+
+
+void Logger::info(int data)
+{
+    // Log the text using `INFO` as the header
+    log("INFO", data, m_should_write_to_file);
+    
+} // end of "info"
+
+
 void Logger::error(std::string text)
 {
     // Log the text using `ERROR` as the header
     log("ERROR", text, m_should_write_to_file);
+    
 } // end of "error"
+
+
+void Logger::error(std::vector<std::string> texts)
+{
+    // Log the text using `DEBUG` as the header
+    log("ERROR", texts, m_should_write_to_file);
+
+} // end of "error"
+
+
+void Logger::error(double data)
+{
+    // Log the text using `ERROR` as the header
+    log("ERROR", data, m_should_write_to_file);
+
+} // end of "ERROR"
+
+
+void Logger::error(float data)
+{
+    // Log the text using `ERROR` as the header
+    log("ERROR", data, m_should_write_to_file);
+
+} // end of "ERROR"
+
+
+void Logger::error(int data)
+{
+    // Log the text using `ERROR` as the header
+    log("ERROR", data, m_should_write_to_file);
+
+} // end of "ERROR"
 
 
 void Logger::debug(std::string text)
 {
     // Log the text using `DEBUG` as the header
     log("DEBUG", text, m_should_write_to_file);
+
+} // end of "debug"
+
+
+void Logger::debug(std::vector<std::string> texts)
+{
+    // Log the text using `DEBUG` as the header
+    log("DEBUG", texts, m_should_write_to_file);
+
+} // end of "debug"
+
+
+void Logger::debug(double data)
+{
+    // Log the text using `DEBUG` as the header
+    log("DEBUG", data, m_should_write_to_file);
+
+} // end of "debug"
+
+
+void Logger::debug(float data)
+{
+    // Log the text using `DEBUG` as the header
+    log("DEBUG", data, m_should_write_to_file);
+
+} // end of "debug"
+
+
+void Logger::debug(int data)
+{
+    // Log the text using `DEBUG` as the header
+    log("DEBUG", data, m_should_write_to_file);
+
 } // end of "debug"
 
 
@@ -78,10 +176,41 @@ void Logger::log(std::string header, std::string text, bool should_write_to_file
 } // end of "log"
 
 
+void Logger::log(std::string header, std::vector<std::string> texts, bool should_write_to_file)
+{
+    // Combine the strings into one
+    std::string combined = util::to_string(texts);
+
+    log(header, combined, should_write_to_file);
+
+} // end of "log"
+
+
+void Logger::log(std::string header, double data, bool should_write_to_file)
+{
+    log(header, util::to_string(data), should_write_to_file);
+
+} // end of "log"
+
+
+void Logger::log(std::string header, float data, bool should_write_to_file)
+{
+    log(header, util::to_string(data), should_write_to_file);
+
+} // end of "log"
+
+
+void Logger::log(std::string header, int data, bool should_write_to_file)
+{
+    log(header, util::to_string(data), should_write_to_file);
+
+} // end of "log"
+
+
 std::string Logger::format_text(std::string header, std::string text)
 {
     // Create datetime string using `:` as unit seperator and just a space as a gap
-    std::string datetime = get_date_time(":", " ");
+    std::string datetime = System::get_date_time(":", " ");
 
     // [HEADER] + text
     std::string formatted = datetime + " [" + header + "] " + text;
@@ -110,36 +239,5 @@ bool Logger::is_file_ok()
 {
     // True if the log file is initialized and is open
     return m_log_file && m_log_file.is_open();
+
 } // end of "is_file_ok"
-
-
-std::string Logger::get_date_time(std::string unit_seperator, std::string gap)
-{
-    // Get the tm* object for the datetime data
-    tm* datetime = get_tm();
-
-    // Add 1900 years, I'm not sure why that is though
-    std::string year = std::to_string(datetime->tm_year + 1900);
-    
-    // If the number is single digits, then add a 0 to make it take up two characters for formatting
-    std::string month = datetime->tm_mon < 10 ? "0" + std::to_string(datetime->tm_mon) : std::to_string(datetime->tm_mon);
-    std::string day = datetime->tm_mday < 10 ? "0" + std::to_string(datetime->tm_mday) : std::to_string(datetime->tm_mday);
-
-    std::string hour = datetime->tm_hour < 10 ? "0" + std::to_string(datetime->tm_hour) : std::to_string(datetime->tm_hour);
-    std::string min = datetime->tm_min < 10 ? "0" + std::to_string(datetime->tm_min) : std::to_string(datetime->tm_min);
-    std::string sec = datetime->tm_sec < 10 ? "0" + std::to_string(datetime->tm_sec) : std::to_string(datetime->tm_sec);
-
-    std::string all = year + unit_seperator + month + unit_seperator + day + gap + hour + unit_seperator + min + unit_seperator + sec;
-
-    return all;
-}
-
-
-tm* Logger::get_tm()
-{
-    time_t time = std::time(NULL);
-
-    tm* datetime = localtime(&time);
-
-    return datetime;
-}

@@ -6,6 +6,8 @@
 #include <iostream>
 #include <ctime>
 
+#include "plib/util/system.hpp"
+
 class Logger{
     
     public:
@@ -30,6 +32,34 @@ class Logger{
         static void info(std::string text);
 
         /**
+         * @brief Log the text with `INFO` as the header
+         * 
+         * @param texts `std::vector<std::string>` The texts to log
+         */
+        static void info(std::vector<std::string> texts);
+
+        /**
+         * @brief Log the text with `INFO` as the header
+         * 
+         * @param data `double` The text to log
+         */
+        static void info(double data);
+
+        /**
+         * @brief Log the text with `INFO` as the header
+         * 
+         * @param data `float` The text to log
+         */
+        static void info(float data);
+
+        /**
+         * @brief Log the text with `INFO` as the header
+         * 
+         * @param data `int` The text to log
+         */
+        static void info(int data);
+
+        /**
          * @brief Log the text with `ERROR` as the header
          * 
          * @param text `std::string` The text to log
@@ -37,11 +67,67 @@ class Logger{
         static void error(std::string text);
 
         /**
+         * @brief Log the text with `ERROR` as the header
+         * 
+         * @param texts `std::vector<std::string>` The texts to log
+         */
+        static void error(std::vector<std::string> texts);
+
+        /**
+         * @brief Log the text with `ERROR` as the header
+         * 
+         * @param data `double` The text to log
+         */
+        static void error(double data);
+
+        /**
+         * @brief Log the text with `ERROR` as the header
+         * 
+         * @param data `float` The text to log
+         */
+        static void error(float data);
+
+        /**
+         * @brief Log the text with `ERROR` as the header
+         * 
+         * @param data `int` The text to data
+         */
+        static void error(int data);
+
+        /**
          * @brief Log the text with `DEBUG` as the header
          * 
          * @param text `std::string` The text to log
          */
         static void debug(std::string text);
+        
+        /**
+         * @brief Log the text with `DEBUG` as the header
+         * 
+         * @param texts `std::vector<std::string>` The texts to log
+         */
+        static void debug(std::vector<std::string> texts);
+
+        /**
+         * @brief Log the text with `DEBUG` as the header
+         * 
+         * @param data `double` The data to log
+         */
+        static void debug(double data);
+
+        /**
+         * @brief Log the text with `DEBUG` as the header
+         * 
+         * @param data `float` The data to log
+         */
+        static void debug(float data);
+
+        /**
+         * @brief Log the text with `DEBUG` as the header
+         * 
+         * @param data `int` The data to log
+         */
+        static void debug(int data);
 
         /**
          * @brief Log text with a header and a timestamp. Optionally, write to a log file
@@ -51,6 +137,43 @@ class Logger{
          * @param write_to_file `bool` Whether or not to write to a log file
          */
         static void log(std::string header, std::string text, bool should_write_to_file = m_should_write_to_file);
+
+
+        /**
+         * @brief Log text with a header and a timestamp. Optionally, write to a log file
+         * 
+         * @param header `std::string` The header to display, in brackets `[HEADER]`
+         * @param texts `std::vector<std::string>` Texts to log
+         * @param write_to_file `bool` Whether or not to write to a log file
+         */
+        static void log(std::string header, std::vector<std::string> texts, bool should_write_to_file = m_should_write_to_file);
+
+        /**
+         * @brief Log text with a header and a timestamp. Optionally, write to a log file
+         * 
+         * @param header `std::string` The header to display, in brackets `[HEADER]`
+         * @param data `double` Data to log
+         * @param write_to_file `bool` Whether or not to write to a log file
+         */
+        static void log(std::string header, double data, bool should_write_to_file = m_should_write_to_file);
+
+        /**
+         * @brief Log text with a header and a timestamp. Optionally, write to a log file
+         * 
+         * @param header `std::string` The header to display, in brackets `[HEADER]`
+         * @param data `float` Data to log
+         * @param write_to_file `bool` Whether or not to write to a log file
+         */
+        static void log(std::string header, float data, bool should_write_to_file = m_should_write_to_file);
+
+        /**
+         * @brief Log text with a header and a timestamp. Optionally, write to a log file
+         * 
+         * @param header `std::string` The header to display, in brackets `[HEADER]`
+         * @param data `int` Data to log
+         * @param write_to_file `bool` Whether or not to write to a log file
+         */
+        static void log(std::string header, int data, bool should_write_to_file = m_should_write_to_file);
 
         /**
          * @brief Format text such that the current datetime is displayed first, then 
@@ -75,22 +198,6 @@ class Logger{
          */
         static bool is_file_ok();
 
-        /**
-         * @brief Get a formatted string of the current date and time in the following order: year, month
-         * , day, hour, min, sec
-         * 
-         * @param unit_seperator `std::string` The string to use between each unit, like betweent the year, month, and day 
-         * @param gap `std::string` The string to use between the calender date and clock time
-         * @return `std::string` The formatted date and time string 
-         */
-        static std::string get_date_time(std::string unit_seperator = ":", std::string gap = "_");
-
-        /**
-         * @brief Gets the datetime object
-         * 
-         * @return `tm*` The datetime object 
-         */
-        static tm* get_tm();
 
     private:
        

@@ -40,6 +40,17 @@ void print(int value, bool should_end_line)
 void print(std::vector<std::string> texts, bool should_end_line)
 {
     // Store the combined texts into this variable
+    std::string combined = to_string(texts);
+
+    // Print out the combined string
+    print(combined, should_end_line);
+
+} // end of "print"
+
+
+std::string to_string(std::vector<std::string> texts)
+{
+    // Store the combined texts into this variable
     std::string combined = "";
 
     // Loop through every single string and add it to combined
@@ -48,10 +59,10 @@ void print(std::vector<std::string> texts, bool should_end_line)
         combined += text;
     }
 
-    // Print out the combined string
-    print(combined, should_end_line);
+    // Return the combined string
+    return combined;
 
-} // end of "print"
+} // end of "to_string"
 
 
 std::string to_string(double data)

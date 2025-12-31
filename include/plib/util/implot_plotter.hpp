@@ -18,7 +18,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
-// The code below is from `implot_demo.cpp`, this code is not mine
+// The code below (the code inside the namespace) is from `implot_demo.cpp`, this code is not mine
 
 namespace ImGui{
 
@@ -44,6 +44,15 @@ struct ScrollingBuffer {
         if (Data.size() > 0) {
             Data.shrink(0);
             Offset  = 0;
+        }
+    }
+    ImVec2 getLatestPoint() {
+        int size = Data.size();
+
+        if (size < MaxSize)
+            return Data[size - 1];
+        else {
+            return Data[Offset - 1];
         }
     }
 };

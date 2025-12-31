@@ -75,8 +75,29 @@ status_utils::StatusCode ImPlotter::update()
 
     // Start the plot. Make the widget fixed in size
     ImGui::Begin("Plotter", nullptr, ImGuiWindowFlags_NoResize);
-    ImGui::Text("ImGui + SDL2 + OpenGL works!");
 
+    // Display Each Axis Value for each Data Buffer
+    for(const auto& pair : m_data_map)
+    {
+        const char* name = pair.first.c_str();
+
+        ImGui::ScrollingBuffer data = pair.second;
+
+        if(ImGui::TreeNodeEx(name))
+        {
+            std::string x_text = "X Axis: " + util::to_string(data.getLatestPoint().x);
+
+            ImGui::BulletText(x_text.c_str());
+
+            std::string y_text = "Y Axis: " + util::to_string(data.getLatestPoint().y);
+
+            ImGui::BulletText(y_text.c_str());
+
+            ImGui::TreePop();
+        }
+    }
+
+    // Add Slider for changing the history
     ImGui::SliderFloat("History", &m_history, 1, 30, "%.1f s");
 
     if(ImPlot::BeginPlot("My Plot", ImVec2(-1, -1)))
@@ -89,12 +110,14 @@ status_utils::StatusCode ImPlotter::update()
         // For every pair in the map, plot the data buffer
         for(const auto& pair : m_data_map)
         {
+            // The name of the plot
             const char* name = pair.first.c_str();
 
+            // The data buffer
             ImGui::ScrollingBuffer data = pair.second;
 
-            ImPlot::PlotLine
-            (
+            // Plot it
+            ImPlot::PlotLine(
                 name, 
                 &data.Data[0].x, 
                 &data.Data[0].y, 
@@ -103,10 +126,8 @@ status_utils::StatusCode ImPlotter::update()
                 data.Offset, 
                 2*sizeof(float)
             );
-
-            // ImPlot::PlotText(name, data.Data[0].x, data.Data[0].y);
         }
-
+            
         ImPlot::EndPlot();
     }
 

@@ -67,13 +67,21 @@ status_utils::StatusCode ImPlotter::update()
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::Begin("Hello");
+    // Center the plot
+    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
+    
+    // Make the plot size equal to the main window size
+    ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize, ImGuiCond_Always);
+
+    // Start the plot. Make the widget fixed in size
+    ImGui::Begin("Plotter", nullptr, ImGuiWindowFlags_NoResize);
     ImGui::Text("ImGui + SDL2 + OpenGL works!");
 
     ImGui::SliderFloat("History", &m_history, 1, 30, "%.1f s");
 
-    if(ImPlot::BeginPlot("My Plot"))
+    if(ImPlot::BeginPlot("My Plot", ImVec2(-1, -1)))
     {
+        
         ImPlot::SetupAxes("Time (s)", "Y Axis", m_axis_flags, m_axis_flags);
         ImPlot::SetupAxisLimits(ImAxis_X1, System::get_time_since_start() - m_history, System::get_time_since_start(), ImGuiCond_Always);
         // ImPlot::SetupAxisLimits(ImAxis_Y1, 0, 1);
@@ -95,6 +103,8 @@ status_utils::StatusCode ImPlotter::update()
                 data.Offset, 
                 2*sizeof(float)
             );
+
+            // ImPlot::PlotText(name, data.Data[0].x, data.Data[0].y);
         }
 
         ImPlot::EndPlot();
@@ -167,4 +177,4 @@ SDL_GLContext ImPlotter::m_gl_context = NULL;
 
 float ImPlotter::m_history = 10;
 std::unordered_map<std::string, ImGui::ScrollingBuffer> ImPlotter::m_data_map;
-ImPlotAxisFlags ImPlotter::m_axis_flags = ImPlotAxisFlags_AutoFit;
+ImPlotAxisFlags ImPlotter::m_axis_flags = ImPlotAxisFlags_PanStretch; // ImPlotAxisFlags_AutoFit;

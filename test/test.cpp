@@ -19,7 +19,7 @@
 
 int main()
 {
-    ImPlotter::initialize();
+    // ImPlotter::initialize();
 
     while (System::is_alive())
     {

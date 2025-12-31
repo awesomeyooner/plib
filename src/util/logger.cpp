@@ -47,17 +47,115 @@ void Logger::info(std::string text)
 } // end of "info"
 
 
+void Logger::info(std::vector<std::string> texts)
+{
+    // Log the text using `INFO` as the header
+    log("INFO", texts, m_should_write_to_file);
+
+} // end of "info"
+
+
+void Logger::info(double data)
+{
+    // Log the text using `INFO` as the header
+    log("INFO", data, m_should_write_to_file);
+    
+} // end of "info"
+
+
+void Logger::info(float data)
+{
+    // Log the text using `INFO` as the header
+    log("INFO", data, m_should_write_to_file);
+    
+} // end of "info"
+
+
+void Logger::info(int data)
+{
+    // Log the text using `INFO` as the header
+    log("INFO", data, m_should_write_to_file);
+    
+} // end of "info"
+
+
 void Logger::error(std::string text)
 {
     // Log the text using `ERROR` as the header
     log("ERROR", text, m_should_write_to_file);
+    
 } // end of "error"
+
+
+void Logger::error(std::vector<std::string> texts)
+{
+    // Log the text using `DEBUG` as the header
+    log("ERROR", texts, m_should_write_to_file);
+
+} // end of "error"
+
+
+void Logger::error(double data)
+{
+    // Log the text using `ERROR` as the header
+    log("ERROR", data, m_should_write_to_file);
+
+} // end of "ERROR"
+
+
+void Logger::error(float data)
+{
+    // Log the text using `ERROR` as the header
+    log("ERROR", data, m_should_write_to_file);
+
+} // end of "ERROR"
+
+
+void Logger::error(int data)
+{
+    // Log the text using `ERROR` as the header
+    log("ERROR", data, m_should_write_to_file);
+
+} // end of "ERROR"
 
 
 void Logger::debug(std::string text)
 {
     // Log the text using `DEBUG` as the header
     log("DEBUG", text, m_should_write_to_file);
+
+} // end of "debug"
+
+
+void Logger::debug(std::vector<std::string> texts)
+{
+    // Log the text using `DEBUG` as the header
+    log("DEBUG", texts, m_should_write_to_file);
+
+} // end of "debug"
+
+
+void Logger::debug(double data)
+{
+    // Log the text using `DEBUG` as the header
+    log("DEBUG", data, m_should_write_to_file);
+
+} // end of "debug"
+
+
+void Logger::debug(float data)
+{
+    // Log the text using `DEBUG` as the header
+    log("DEBUG", data, m_should_write_to_file);
+
+} // end of "debug"
+
+
+void Logger::debug(int data)
+{
+    // Log the text using `DEBUG` as the header
+    log("DEBUG", data, m_should_write_to_file);
+
 } // end of "debug"
 
 
@@ -74,6 +172,37 @@ void Logger::log(std::string header, std::string text, bool should_write_to_file
 
     // Send the formatted text to the terminal
     std::cout << formatted << std::endl;
+
+} // end of "log"
+
+
+void Logger::log(std::string header, std::vector<std::string> texts, bool should_write_to_file)
+{
+    // Combine the strings into one
+    std::string combined = util::to_string(texts);
+
+    log(header, combined, should_write_to_file);
+
+} // end of "log"
+
+
+void Logger::log(std::string header, double data, bool should_write_to_file)
+{
+    log(header, util::to_string(data), should_write_to_file);
+
+} // end of "log"
+
+
+void Logger::log(std::string header, float data, bool should_write_to_file)
+{
+    log(header, util::to_string(data), should_write_to_file);
+
+} // end of "log"
+
+
+void Logger::log(std::string header, int data, bool should_write_to_file)
+{
+    log(header, util::to_string(data), should_write_to_file);
 
 } // end of "log"
 

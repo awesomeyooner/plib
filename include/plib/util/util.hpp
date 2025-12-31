@@ -60,6 +60,14 @@ void print(std::vector<std::string> texts, bool should_end_line = true);
 
 
 /**
+ * @brief Combines a vector of strings into one string
+ * 
+ * @param texts `std::vector<std::string>` Vector of strings
+ * @return `std::string` The combined strings
+ */
+std::string to_string(std::vector<std::string> texts);
+
+/**
  * @brief `std::to_string` but keeps precision of primitive data types
  * 
  * @param data `double` Number to convert

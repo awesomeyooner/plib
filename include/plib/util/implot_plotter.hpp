@@ -33,6 +33,8 @@ struct ScrollingBuffer {
         Data.reserve(MaxSize);
     }
     void AddPoint(float x, float y) {
+        Logger::debug(std::to_string(Offset) + " " + std::to_string(Data.size()));
+
         if (Data.size() < MaxSize)
             Data.push_back(ImVec2(x,y));
         else {
@@ -46,13 +48,13 @@ struct ScrollingBuffer {
             Offset  = 0;
         }
     }
-    ImVec2 getLatestPoint() {
+    ImVec2& getLatestPoint() {
         int size = Data.size();
 
         if (size < MaxSize)
             return Data[size - 1];
         else {
-            return Data[Offset - 1];
+            return Data[Offset];
         }
     }
 };

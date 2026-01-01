@@ -55,9 +55,12 @@ target_include_directories(plib
 
 target_compile_features(plib PUBLIC cxx_std_17)
 
-add_executable(Test test/test.cpp)
-target_link_libraries(Test PRIVATE 
-    plib 
-    OpenGL::GL
-    SDL2::SDL2 
-)
+# Add the test executables only if this project is at the top level (aka not used with add_subdirectory)
+if(PROJECT_IS_TOP_LEVEL)
+    add_executable(Test test/test.cpp)
+    target_link_libraries(Test PRIVATE 
+        plib 
+        OpenGL::GL
+        SDL2::SDL2 
+    )
+endif()

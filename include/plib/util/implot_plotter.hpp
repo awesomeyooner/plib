@@ -102,6 +102,16 @@ class ImPlotter{
 
 
         /**
+         * @brief Display a plot with a fixed data buffer
+         * 
+         * @param data_x `std::vector<double>&` The X-Axis data buffer
+         * @param data_y `std::vector<double>&` The Y-Axis data buffer
+         * @return `status_utils::StatusCode` FAILED if exit request send. OK otherwise 
+         */
+        static status_utils::StatusCode plot_fixed(std::vector<double>& data_x, std::vector<double>& data_y);
+
+
+        /**
          * @brief Push new data to the buffer
          * 
          * @param x_data `double` The X Axis value. Typically Time

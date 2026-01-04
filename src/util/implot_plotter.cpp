@@ -150,6 +150,56 @@ status_utils::StatusCode ImPlotter::update()
 } // end of "update"
 
 
+status_utils::StatusCode ImPlotter::plot_fixed(std::vector<double>& data_x, std::vector<double>& data_y)
+{
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
+        ImGui_ImplSDL2_ProcessEvent(&event);
+
+        if (event.type == SDL_QUIT)
+            return status_utils::StatusCode::FAILED;
+    }
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
+
+    // Center the plot
+    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
+    
+    // Make the plot size equal to the main window size
+    ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize, ImGuiCond_Always);
+
+    // Start the plot. Make the widget fixed in size
+    ImGui::Begin("Plotter", nullptr, ImGuiWindowFlags_NoResize);
+
+    if(ImPlot::BeginPlot("My Plot", ImVec2(-1, -1)))
+    {
+        
+        ImPlot::SetupAxes("X Axis", "Y Axis", m_axis_flags, m_axis_flags);
+        // ImPlot::SetupAxisLimits(ImAxis_Y1, 0, 1);
+
+        ImPlot::PlotLine("My Plot", data_x.data(), data_y.data(), data_x.size());
+            
+        ImPlot::EndPlot();
+    }
+
+    ImGui::End();
+
+    ImGui::Render();
+
+    glViewport(0, 0, 800, 600);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    SDL_GL_SwapWindow(m_window);
+
+    return status_utils::StatusCode::OK;
+
+} // end of "update"
+
 void ImPlotter::push_data(double x_data, double y_data, std::string name)
 {
     // Push new data to the buffer at the specified name

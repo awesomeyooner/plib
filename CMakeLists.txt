@@ -19,6 +19,8 @@ add_library(plib
     src/i2c/i2c.cpp
     src/i2c/wire_device.cpp
 
+    src/math/motion/cubic_hermite_spline.cpp
+
     # ImGUI Core
     lib/imgui/imgui_demo.cpp
     lib/imgui/imgui_draw.cpp

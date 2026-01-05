@@ -71,6 +71,13 @@ double CubicHermiteSpline::get_k()
     double ka = get_ka();
     double kv = get_kv();
 
+    // If either one is zero, return the other
+    if(ka == 0 && kv != 0)
+        return kv;
+    else if(kv == 0 && ka != 0)
+        return ka;
+
+    // Return the smaller of the two
     return ka > kv ? kv : ka; 
 
 } // end of "get_k"

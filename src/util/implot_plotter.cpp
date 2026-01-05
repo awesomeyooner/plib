@@ -200,6 +200,49 @@ status_utils::StatusCode ImPlotter::plot_fixed(std::vector<double>& data_x, std:
 
 } // end of "update"
 
+
+status_utils::StatusCode ImPlotter::plot_custom(std::function<status_utils::StatusCode(SDL_Window*, SDL_GLContext&)> runnable)
+{
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
+        ImGui_ImplSDL2_ProcessEvent(&event);
+
+        if (event.type == SDL_QUIT)
+            return status_utils::StatusCode::FAILED;
+    }
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
+
+    // Center the plot
+    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
+    
+    // Make the plot size equal to the main window size
+    ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize, ImGuiCond_Always);
+
+    // Start the plot. Make the widget fixed in size
+    ImGui::Begin("Plotter", nullptr, ImGuiWindowFlags_NoResize);
+
+    runnable(m_window, m_gl_context);
+
+    ImGui::End();
+
+    ImGui::Render();
+
+    glViewport(0, 0, 800, 600);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    SDL_GL_SwapWindow(m_window);
+
+    return status_utils::StatusCode::OK;
+
+} // end of "plot_custom"
+
+
 void ImPlotter::push_data(double x_data, double y_data, std::string name)
 {
     // Push new data to the buffer at the specified name
@@ -229,6 +272,20 @@ void ImPlotter::shutdown()
     SDL_Quit();
 
 } // end of "shutdown"
+
+
+SDL_Window* ImPlotter::get_window()
+{
+    return m_window;
+
+} // end of "get_window"
+
+
+SDL_GLContext& ImPlotter::get_context()
+{
+    return m_gl_context;
+
+} // end of "get_context"
 
 
 ImGui::ScrollingBuffer& ImPlotter::initialize_data_map(std::string name)

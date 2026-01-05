@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstdio>
 #include <unordered_map>
+#include <functional>
 
 #include "plib/util/system.hpp"
 #include "plib/util/status.hpp"
@@ -112,6 +113,15 @@ class ImPlotter{
 
 
         /**
+         * @brief Shorthand for creating custom plots that aren't in this class
+         * 
+         * @param runnable `std::function<status_utils::StatusCode(SDL_Window*, SDL_GLContext&)>` Custom Runnable
+         * @return `status_utils::StatusCode` FAILED if exit request sent. OK if successful, ERROR otherwise 
+         */
+        static status_utils::StatusCode plot_custom(std::function<status_utils::StatusCode(SDL_Window*, SDL_GLContext&)> runnable);
+
+
+        /**
          * @brief Push new data to the buffer
          * 
          * @param x_data `double` The X Axis value. Typically Time
@@ -129,11 +139,29 @@ class ImPlotter{
          */
         static void push_data(double data, std::string name = "My Line Plot");
 
+
         /**
          * @brief Shutdown ImGui and the backends
          * 
          */
         static void shutdown(); 
+
+        
+        /**
+         * @brief Get the SDL_Window* object
+         * 
+         * @return `SDL_Window*` The SDL Window Pointer 
+         */
+        static SDL_Window* get_window();
+
+        
+        /**
+         * @brief Get the SDL_GLContext& object
+         * 
+         * @return `SDL_GLContext&` The SDL OpenGL Context reference 
+         */
+        static SDL_GLContext& get_context();
+
 
     private:
 

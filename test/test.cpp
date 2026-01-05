@@ -56,6 +56,7 @@ void test_spline()
     double* P1 = &spline.m_P1;
     double* v1 = &spline.m_v1;
 
+    double* j_max = &spline.m_j_max;
     double* a_max = &spline.m_a_max;
     double* v_max = &spline.m_v_max;
 
@@ -69,7 +70,7 @@ void test_spline()
         std::function<status_utils::StatusCode(SDL_Window*, SDL_GLContext&)> runnable;
 
         runnable = 
-            [&spline, P0, v0, P1, v1, a_max, v_max, slider_min, slider_max, &resolution](SDL_Window* window, SDL_GLContext& context){
+            [&spline, P0, v0, P1, v1, j_max, a_max, v_max, slider_min, slider_max, &resolution](SDL_Window* window, SDL_GLContext& context){
 
                 ImGui::InputDouble("P0 Input", P0);
                 ImGui::SliderScalar("P0 Slider", ImGuiDataType_Double, P0, &slider_min, & slider_max, "%.1f Units");
@@ -82,6 +83,9 @@ void test_spline()
 
                 ImGui::InputDouble("v1 Input", v1);
                 ImGui::SliderScalar("v1 Slider", ImGuiDataType_Double, v1, &slider_min, & slider_max, "%.1f Units");
+
+                ImGui::InputDouble("j_max Input", j_max);
+                ImGui::SliderScalar("j_max Slider", ImGuiDataType_Double, j_max, &slider_min, & slider_max, "%.1f Units");
 
                 ImGui::InputDouble("a_max Input", a_max);
                 ImGui::SliderScalar("a_max Slider", ImGuiDataType_Double, a_max, &slider_min, & slider_max, "%.1f Units");

@@ -213,7 +213,7 @@ status_utils::StatusCode I2C::write_bus(i2c_device* device, uint8_t write)
     std::vector data = {write};
 
     // Call the `write_m_bus` method
-    write_bus(device, data);
+    return write_bus(device, data);
 
 } // end of "write_m_bus"
 

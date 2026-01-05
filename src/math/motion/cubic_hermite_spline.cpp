@@ -4,6 +4,7 @@
 CubicHermiteSpline::CubicHermiteSpline()
 {
     // nothing to do for now
+
 } // end of "CubicHermiteSpline"
 
 
@@ -61,5 +62,5 @@ double CubicHermiteSpline::get_k()
     double ka = get_ka();
     double kv = get_kv();
 
-    return ka > kv ? 
+    return ka > kv ? kv : ka; 
 }

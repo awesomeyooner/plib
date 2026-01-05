@@ -95,3 +95,45 @@ double CubicHermiteSpline::P(double t)
     return r1m + (r1m * k * t) + (r3m * std::pow(k, 2) * std::pow(t, 2)) + (r4m * std::pow(k, 3) * std::pow(t, 3));
 
 } // end of "P"
+
+
+double CubicHermiteSpline::P_prime_1(double t)
+{
+    double k = get_k();
+
+    double r1m = m_P0;
+    double r2m = m_v0 / k;
+    double r3m = ( -3 * m_P0 ) - ( 2 * m_v0 / k ) + ( 3 * m_P1 ) - ( m_v1 / k );
+    double r4m = ( 2 * m_P0 ) + ( m_v0 / k ) - ( 2 * m_P1 ) + ( m_v1 / k );
+    
+    return (r1m * k) + (2 * r3m * std::pow(k, 2) * t) + (3 * r4m * std::pow(k, 3) * std::pow(t, 2));
+
+} // end of "P_prime_1"
+
+
+double CubicHermiteSpline::P_prime_2(double t)
+{
+    double k = get_k();
+
+    double r1m = m_P0;
+    double r2m = m_v0 / k;
+    double r3m = ( -3 * m_P0 ) - ( 2 * m_v0 / k ) + ( 3 * m_P1 ) - ( m_v1 / k );
+    double r4m = ( 2 * m_P0 ) + ( m_v0 / k ) - ( 2 * m_P1 ) + ( m_v1 / k );
+    
+    return (2 * r3m * std::pow(k, 2)) + (6 * r4m * std::pow(k, 3) * t);
+
+} // end of "P_prime_2"
+
+
+double CubicHermiteSpline::P_prime_3(double t)
+{
+    double k = get_k();
+
+    double r1m = m_P0;
+    double r2m = m_v0 / k;
+    double r3m = ( -3 * m_P0 ) - ( 2 * m_v0 / k ) + ( 3 * m_P1 ) - ( m_v1 / k );
+    double r4m = ( 2 * m_P0 ) + ( m_v0 / k ) - ( 2 * m_P1 ) + ( m_v1 / k );
+    
+    return (6 * r4m * std::pow(k, 3));
+
+} // end of "P_prime_3"

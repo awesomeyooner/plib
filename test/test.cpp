@@ -113,22 +113,31 @@ void test_spline()
                     // ImPlot::SetupAxisLimits(ImAxis_Y1, 0, 1);
 
                     std::vector<double> data_x;
-                    std::vector<double> data_y;
+                    std::vector<double> P_data_y;
+                    std::vector<double> P_prime_1_data_y;
+                    std::vector<double> P_prime_2_data_y;
+                    std::vector<double> P_prime_3_data_y;
 
                     for (size_t i = 0; i < resolution; i++)
                     {
                         double time = ( (double)i / (double)resolution ) * spline.get_total_time();
-                        double output = spline.P(time);
+                        double P = spline.P(time);
+                        double P_prime_1 = spline.P_prime_1(time);
+                        double P_prime_2 = spline.P_prime_2(time);
+                        double P_prime_3 = spline.P_prime_3(time);
 
                         data_x.push_back(time);
-                        data_y.push_back(output);
+                        P_data_y.push_back(P);
+                        P_prime_1_data_y.push_back(P_prime_1);
+                        P_prime_2_data_y.push_back(P_prime_2);
+                        P_prime_3_data_y.push_back(P_prime_3);
 
                     }
 
-                    Logger::debug(data_x.at(resolution - 1));
-                    Logger::debug(data_y.at(resolution - 1));
-
-                    ImPlot::PlotLine("My Plot", data_x.data(), data_y.data(), data_x.size());
+                    ImPlot::PlotLine("P(t)", data_x.data(), P_data_y.data(), data_x.size());
+                    ImPlot::PlotLine("P'(t)", data_x.data(), P_prime_1_data_y.data(), data_x.size());
+                    ImPlot::PlotLine("P''(t)", data_x.data(), P_prime_2_data_y.data(), data_x.size());
+                    ImPlot::PlotLine("P'''(t)", data_x.data(), P_prime_3_data_y.data(), data_x.size());
                         
                     ImPlot::EndPlot();
                 }

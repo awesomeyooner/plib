@@ -91,16 +91,19 @@ void test_spline()
 
                 ImGui::SliderInt("Resolution", &resolution, 100, 5000, "%d Units");
 
+                double kj = spline.get_kj();
                 double ka = spline.get_ka();
                 double kv = spline.get_kv();
                 double k = spline.get_k();
                 double total_time = spline.get_total_time();
 
+                std::string kj_text = "kj: " + std::to_string(kj);
                 std::string ka_text = "ka: " + std::to_string(ka);
                 std::string kv_text = "kv: " + std::to_string(kv);
                 std::string k_text = "k: " + std::to_string(k);
                 std::string total_time_text = "Total Time: " + std::to_string(total_time);
                 
+                ImGui::Text(kj_text.c_str());
                 ImGui::Text(ka_text.c_str());
                 ImGui::Text(kv_text.c_str());
                 ImGui::Text(k_text.c_str());

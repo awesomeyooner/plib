@@ -9,10 +9,46 @@ CubicHermiteSpline::CubicHermiteSpline()
     m_P1 = 20;
     m_v1 = 0;
 
+    m_j_max = 10;
     m_a_max = 10;
     m_v_max = 10;
 
 } // end of "CubicHermiteSpline"
+
+
+double CubicHermiteSpline::get_kj()
+{
+    // Define shorthands
+    double a = ( 2 * m_P0 ) - ( 2 * m_P1 );
+    double b = m_v0 + m_v1;
+    double c = 0;
+    double d = - m_j_max / 6;
+
+    // Convert into a depressed cubic
+    // TODO: verify that you can just remove all terms multiplied by c
+    double p = ( ( 3 * a * c) - ( b * b ) ) / ( 3 * a * a );
+    double q = ( ( 2 * std::pow(b, 3) ) - ( 9 * a * b * c ) + ( 27 * a * a * d ) ) / ( 27 * std::pow(a, 3) );
+    
+    // Use Cardrano's Formula to solve for the real root
+    // https://en.wikipedia.org/wiki/Cubic_equation
+    double discriminant = ( q * q / 4 ) + ( p * p * p / 27 );
+    double sqrt_discriminant = std::pow(discriminant, 1.0 / 2.0);
+
+    double u1 = ( -q / 2) + sqrt_discriminant;
+    double u2 = ( -q / 2) - sqrt_discriminant;
+
+    // For some reason std::pow( ... , 1.0 / 3.0) doesn't like negative numbers, so I'm doing this
+    // as a temporary workaround until I can find a cleaner way
+    double cube_root_u1 = std::copysign(std::pow( std::abs(u1) , 1.0 / 3.0), u1);
+    double cube_root_u2 = std::copysign(std::pow( std::abs(u2) , 1.0 / 3.0), u2);
+
+    // You can use roots of unity (cubic) to find the other two
+    double root = cube_root_u1 + cube_root_u2;
+
+    // k must be positive
+    return std::abs(root);
+
+} // end of "get_kj"
 
 
 double CubicHermiteSpline::get_ka()
@@ -68,17 +104,12 @@ double CubicHermiteSpline::get_kv()
 
 double CubicHermiteSpline::get_k()
 {
+    double kj = get_kj();
     double ka = get_ka();
     double kv = get_kv();
 
-    // If either one is zero, return the other
-    if(ka == 0 && kv != 0)
-        return kv;
-    else if(kv == 0 && ka != 0)
-        return ka;
-
-    // Return the smaller of the two
-    return ka > kv ? kv : ka; 
+    // Return the smaller of the three but excluding 0
+    return nonzero_min(kj, ka, kv);
 
 } // end of "get_k"
 
@@ -144,3 +175,37 @@ double CubicHermiteSpline::P_prime_3(double t)
     return (6 * r4m * std::pow(k, 3));
 
 } // end of "P_prime_3"
+
+
+// This is just a helper function to clean up my methods
+double CubicHermiteSpline::nonzero_min(double a, double b)
+{
+    // If one is 0, return the other
+    if( a == 0 && b != 0)
+        return b;
+    else if( b == 0 && a != 0)
+        return a;
+    
+    // Is b smaller than a? Then return b. Else return a;'
+    return a > b ? b : a;
+
+} // end of "nonzero_min"
+
+
+// This is just a helper function to clean up my methods
+double CubicHermiteSpline::nonzero_min(double a, double b, double c)
+{
+    // If only 1 is nonzero, then return that one
+    if(a == 0 && b == 0 && c != 0)
+        return c;
+    if( a == 0 && c== 0 && b != 0)
+        return b;
+    else if( b == 0 && c == 0 && a != 0)
+        return a;
+
+    double min_of_ab = nonzero_min(a, b);
+    
+    // Is the min of a and b smaller than c? Then return that. Else return c 
+    return min_of_ab < c ? min_of_ab : c;
+    
+} // end of "nonzero_min"

@@ -9,18 +9,43 @@ class CubicHermiteSpline{
 
 
     public:
-        double m_P0;
-        double m_v0;
-        double m_P1;
-        double m_v1;
 
-        double m_a_max;
-        double m_v_max;
+        // Initial and End Conditions
+
+            // Initial Position
+            double m_P0;
+
+            // Initial Velocity
+            double m_v0;
+
+            // End Position
+            double m_P1;
+
+            // End Velocity
+            double m_v1;
+
+        // Constraints
+
+            // The max allowed jerk
+            double m_j_max;
+
+            // The max allowed acceleration
+            double m_a_max;
+
+            // The max allowed velocity
+            double m_v_max;
 
         double k;
 
         CubicHermiteSpline();
 
+
+        /**
+         * @brief Get k when jerk is limited
+         * 
+         * @return `double` k 
+         */
+        double get_kj();
 
         /**
          * @brief Get k when acceleration is limited
@@ -88,6 +113,27 @@ class CubicHermiteSpline{
         double P_prime_3(double t);
 
     private:
+
+        // TODO: Move the nonzero_min functions to math_helper.hpp once you rewrite it to define and declare
+        
+        /**
+         * @brief Returns the smaller of the two parameters, but if one is zero, it'll return the other.
+         * 
+         * @param a `double` The first number
+         * @param b `double` The second number
+         * @return `double` The smaller of the two excluding 0 
+         */
+        static double nonzero_min(double a, double b);
+
+        /**
+         * @brief Returns the smaller of the three parameters, but if one is zero, it'll return the other.
+         * 
+         * @param a `double` The first number
+         * @param b `double` The second number
+         * @param c `double` The third number
+         * @return `double` The smaller of the three excluding 0 
+         */
+        static double nonzero_min(double a, double b, double c);
 
 }; // class CubicHermiteSpline
 

@@ -3,6 +3,8 @@
 
 #include <cmath>
 
+#include "plib/util/logger.hpp"
+
 class CubicHermiteSpline{
 
 
@@ -40,6 +42,23 @@ class CubicHermiteSpline{
          * @return `double` k 
          */
         double get_k();
+
+
+        /**
+         * @brief Get the total time the spline would take. It's just 1 / k
+         * 
+         * @return `double` The time in seconds 
+         */
+        double get_total_time();
+
+
+        /**
+         * @brief The Spline as a function of t
+         * 
+         * @param t `double` The time from [0, 1/k] 
+         * @return `double` The output of the function 
+         */
+        double P(double t);
 
 
     private:

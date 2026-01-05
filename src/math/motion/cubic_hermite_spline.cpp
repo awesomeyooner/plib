@@ -3,13 +3,21 @@
 
 CubicHermiteSpline::CubicHermiteSpline()
 {
-    // nothing to do for now
+    // Leave this here for now to make testing with desmos easier
+    m_P0 = 0;
+    m_v0 = 0;
+    m_P1 = 20;
+    m_v1 = 0;
+
+    m_a_max = 10;
+    m_v_max = 10;
 
 } // end of "CubicHermiteSpline"
 
 
 double CubicHermiteSpline::get_ka()
 {
+    // Math defined in my notes
     double a = -3 * m_P0 + 3 * m_P1;
     double b = -2 * m_v0 - m_v1;
     double c = - m_a_max / 2;
@@ -20,11 +28,11 @@ double CubicHermiteSpline::get_ka()
 
     if(discriminant > 0)
     {
-        return abs( (-b + sqrt(discriminant)) / (2 * a));
+        return std::abs( (-b + std::sqrt(discriminant)) / (2 * a));
     }
     else
     {
-        return abs( (-b - sqrt(-discriminant)) / (2 * a));
+        return std::abs( (-b - std::sqrt(-discriminant)) / (2 * a));
     }
 
 } // end of "get_ka"
@@ -32,6 +40,7 @@ double CubicHermiteSpline::get_ka()
 
 double CubicHermiteSpline::get_kv()
 {
+    // Math defined in my notes
     double c1 = 2 * m_P0 - 2 * m_P1;
     double c2 = m_v0 + m_v1;
     double c3 = 3 * (m_P1 - m_P0);
@@ -47,11 +56,11 @@ double CubicHermiteSpline::get_kv()
 
     if(discriminant > 0)
     {
-        return abs( (-b + sqrt(discriminant)) / (2 * a));
+        return std::abs( (-b + std::sqrt(discriminant)) / (2 * a));
     }
     else
     {
-        return abs( (-b - sqrt(-discriminant)) / (2 * a));
+        return std::abs( (-b - std::sqrt(-discriminant)) / (2 * a));
     }
 
 } // end of "get_kv"
@@ -63,4 +72,26 @@ double CubicHermiteSpline::get_k()
     double kv = get_kv();
 
     return ka > kv ? kv : ka; 
-}
+
+} // end of "get_k"
+
+
+double CubicHermiteSpline::get_total_time()
+{
+    return 1 / get_k();
+
+} // end of "get_total_time"
+
+
+double CubicHermiteSpline::P(double t)
+{
+    double k = get_k();
+
+    double r1m = m_P0;
+    double r2m = m_v0 / k;
+    double r3m = ( -3 * m_P0 ) - ( 2 * m_v0 / k ) + ( 3 * m_P1 ) - ( m_v1 / k );
+    double r4m = ( 2 * m_P0 ) + ( m_v0 / k ) - ( 2 * m_P1 ) + ( m_v1 / k );
+    
+    return r1m + (r1m * k * t) + (r3m * std::pow(k, 2) * std::pow(t, 2)) + (r4m * std::pow(k, 3) * std::pow(t, 3));
+
+} // end of "P"

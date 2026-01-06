@@ -33,7 +33,7 @@ status_utils::StatusCode I2C::init(int adapter_number)
 status_utils::StatusCode I2C::init_name(std::string name, bool verbose)
 {
     // The path where all the i2c folders are in
-    const fs::path i2c_path = "/sys/m_bus/i2c/devices";
+    const fs::path i2c_path = "/sys/bus/i2c/devices";
 
     // For every folder within the main path, check the names match
     // the given name. If it does, use that adapter and return OK

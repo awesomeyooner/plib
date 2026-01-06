@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <iostream>
+#include <deque>
+#include <cmath>
 
 #include "plib/util/system.hpp"
 
@@ -13,7 +15,7 @@ enum class FeedForwardType{
     STATIC,
 
     // Applies a constant feedforward based on the direction / sign of error
-    BI_STATIC,
+    STATIC_SIGNED,
 
     // Applies a feedforward based on the cosine of the position (position must be in radians)
     COS,
@@ -63,6 +65,7 @@ struct TimestampedValue{
 
 }; // struct TimestampedValue
 
+
 // Class for a PID Controller, implementing feedforwards in addition to PID.
 class PIDController{
 
@@ -92,29 +95,33 @@ class PIDController{
         // The current velocity
         double m_velocity;
 
-        // The accumulated error buffer
-        std::vector<double> error_buffer;
-
         // How much time between the current and last integrated value to use
-        double integral_time_bound;
-
-        // The timestamp of the previous loop
-        double m_previous_timestamp;
+        double m_integral_time_bound = 5; // seconds
 
         PIDController(double kP, double kI, double kD);
         PIDController(double kP, double kI, double kD, double kF, FeedForwardType ff_type);
 
-        double get_error(double setpoint);
+        double get_error();
         double get_accumulated_error();
-        double get_error_rate(double setpoint);
+        double get_error_rate();
 
-        double calculate(double position);
-        double calculate(double position, double setpoint);
-        double calculate(double position, double setpoint, double velocity);
+        double calculate(double timestamp, double position);
+        double calculate(double timestamp, double position, double setpoint);
+        double calculate(double timestamp, double position, double velocity, double setpoint);
 
     private:
+
+        // Buffer for storing previous loops' errors
+        // The front has the MOST RECENT error
+        // The back has the OLDEST error
+        std::deque<TimestampedValue<double>> m_error_buffer;
         
-        double accumulated_error;
+        // The accumulated error (integral of error within the bounds)
+        double m_accumulated_error;
+
+        double update_accumulated_error(double timestamp, double position);
+        double update_error_rate(double timestamp, double position);
+        double get_feedforward();
 
 
 }; // class PIDController

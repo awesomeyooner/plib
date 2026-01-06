@@ -8,6 +8,8 @@
 
 #include "plib/math/motion/cubic_hermite_spline.hpp"
 
+#include "plib/math/control/pid_controller.hpp"
+
 #include "plib/i2c/i2c.hpp"
 #include "plib/i2c/wire_device.hpp"
 
@@ -161,9 +163,40 @@ void test_spline()
 } // end of "test_spline"
 
 
+void test_pid()
+{
+    ImPlotter::initialize();
+
+    PIDController pid_controller(0, 0, 0, 0, FeedForwardType::STATIC_SIGNED);
+
+    while(System::is_alive())
+    {
+        pid_controller.m_integral_time_bound = 5;
+        pid_controller.m_setpoint = 0;
+
+        double position = std::sin(System::get_time_since_start());
+
+        pid_controller.calculate(System::get_time_since_start(), position);
+
+        ImPlotter::push_data(sin(System::get_time_since_start()), "Reference");
+        ImPlotter::push_data(pid_controller.get_error(), "Error");
+        ImPlotter::push_data(pid_controller.get_error_rate(), "Error Rate");
+        ImPlotter::push_data(pid_controller.get_accumulated_error(), "Accumulated Error");
+
+        if ( ImPlotter::update() == status_utils::StatusCode::FAILED )
+            System::shutdown();
+    }
+
+    ImPlotter::shutdown();
+    
+} // end of "test_pid"
+
+
 int main()
 {
-    test_spline();
+    // test_spline();
+    test_pid();
+    // test_plotter();
 
     return 0;
 

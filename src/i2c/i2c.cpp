@@ -2,6 +2,9 @@
 
 namespace fs = std::filesystem;
 
+// Define f_to_b
+FloatsBytesConverter f_to_b;
+
 // Default the m_bus to negative, indicating it has not been initialized
 int I2C::m_bus = -1;
 

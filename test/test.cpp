@@ -202,11 +202,21 @@ void test_pid()
 } // end of "test_pid"
 
 
+void test_i2c()
+{
+    if (I2C::init_name("MCP2221", true) == status_utils::StatusCode::FAILED)
+    {
+        Logger::error("I2C Bus Failed to Initialize! Exiting...");
+    }
+} // end of "test_i2c"
+
+
 int main()
 {
     // test_spline();
-    test_pid();
+    // test_pid();
     // test_plotter();
+    test_i2c();
 
     return 0;
 

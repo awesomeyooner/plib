@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 
-project( plib LANGUAGES CXX )
+project( plib LANGUAGES C CXX )
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -23,6 +23,9 @@ add_library(plib
 
     src/math/motion/cubic_hermite_spline.cpp
     src/math/control/pid_controller.cpp
+
+    # libi2c
+    lib/libi2c/src/i2c.c
 
     # ImGUI Core
     lib/imgui/imgui_demo.cpp

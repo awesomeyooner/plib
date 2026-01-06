@@ -1,7 +1,7 @@
 #ifndef I2C_HPP
 #define I2C_HPP
 
-#include "i2c/i2c.h"
+#include "libi2c/include/i2c/i2c.h"
 
 #include <string>
 #include <iostream>
@@ -20,7 +20,10 @@ namespace fs = std::filesystem;
 union FloatsBytesConverter{
     float f_value;
     uint8_t bytes[4];
-} f_to_b;
+};
+
+// You must declare unions like this and define them in .cpp
+extern FloatsBytesConverter f_to_b;
 
 class I2C{
 

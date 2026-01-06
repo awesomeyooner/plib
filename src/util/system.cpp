@@ -29,6 +29,13 @@ std::chrono::_V2::system_clock::time_point System::get_timepoint()
 } // end of "get_timepoint"
 
 
+double System::get_time()
+{
+    return System::timepoint_to_double( System::get_timepoint() );
+    
+} // end of "get_timepoint"
+
+
 double System::timepoint_to_double(std::chrono::_V2::system_clock::time_point timepoint)
 {
     return std::chrono::duration_cast<std::chrono::duration<double>>(timepoint.time_since_epoch()).count();

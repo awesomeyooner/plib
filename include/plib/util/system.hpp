@@ -51,6 +51,14 @@ class System{
 
 
         /**
+         * @brief Gets the current time since epoch
+         * 
+         * @return `double` The time in seconds since epoch 
+         */
+        static double get_time();
+
+
+        /**
          * @brief Converts `std::chrono::_V2::system_clock::time_point` to `double`
          * 
          * @param timepoint `std::chrono::_V2::system_clock::time_point` The timepoint to convert 

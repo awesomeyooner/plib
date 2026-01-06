@@ -7,6 +7,7 @@
 #include <cmath>
 
 #include "plib/util/system.hpp"
+#include "plib/util/logger.hpp"
 
 // Options for what Feed Forward method to use
 enum class FeedForwardType{

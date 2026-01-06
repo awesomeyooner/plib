@@ -133,8 +133,14 @@ double PIDController::update_accumulated_error(double timestamp, double position
         // the accumulated error and remove it from the buffer
         if (m_error_buffer.back().m_timestamp < timestamp - m_integral_time_bound)
         {
-            // Subtract the oldest error from the accumulated error
-            m_accumulated_error -= m_error_buffer.back().m_value;
+            // Subtract the oldest error area from the accumulated error
+            TimestampedValue<double> last_most = m_error_buffer.back();
+            TimestampedValue<double> second_last_most = m_error_buffer.at(m_error_buffer.size() - 2); // -1 is the back, so -2 is the one before the back
+
+            double dt = second_last_most.m_timestamp - last_most.m_timestamp;
+            double remove_area = ( last_most.m_value + second_last_most.m_value ) * ( dt / 2);
+
+            m_accumulated_error -= remove_area;
 
             // Remove it from the buffer
             m_error_buffer.pop_back();
@@ -168,7 +174,7 @@ double PIDController::update_error_rate(double timestamp, double position)
 
     double slope = d_error / d_t;
 
-    m_velocity = slope;
+    m_velocity = -slope;
 
     return slope;
 

@@ -171,14 +171,24 @@ void test_pid()
 
     while(System::is_alive())
     {
-        pid_controller.m_integral_time_bound = 5;
+        pid_controller.m_integral_time_bound = M_PI;
         pid_controller.m_setpoint = 0;
 
-        double position = std::sin(System::get_time_since_start());
+        double time = System::get_time_since_start();
 
-        pid_controller.calculate(System::get_time_since_start(), position);
+        double position = std::sin(time);
 
-        ImPlotter::push_data(sin(System::get_time_since_start()), "Reference");
+        pid_controller.calculate(time, position);
+
+        // Negative since error is setpoint - position
+        ImPlotter::push_data(-sin(time), "Error Reference");
+
+        // Derivative of -sin(x) = -cos(x)
+        ImPlotter::push_data(-cos(time), "Error Rate Reference");
+
+        // Integral of -sin(x) from (x, x - pi) = cos(x) - cos(x - pi)
+        ImPlotter::push_data(cos(time) - cos(time - M_PI), "Accumulated Error Reference");
+
         ImPlotter::push_data(pid_controller.get_error(), "Error");
         ImPlotter::push_data(pid_controller.get_error_rate(), "Error Rate");
         ImPlotter::push_data(pid_controller.get_accumulated_error(), "Accumulated Error");

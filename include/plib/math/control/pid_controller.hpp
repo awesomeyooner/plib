@@ -50,7 +50,7 @@ struct TimestampedValue{
     void update(T value, double timestamp)
     {
         m_value = value;
-        m_timestamp = timestamp
+        m_timestamp = timestamp;
 
     } // end of update
 

@@ -19,6 +19,8 @@ add_library(plib
     src/i2c/i2c.cpp
     src/i2c/wire_device.cpp
 
+    src/i2c/drivers/psd17.cpp
+
     src/math/motion/cubic_hermite_spline.cpp
     src/math/control/pid_controller.cpp
 

@@ -1,6 +1,8 @@
 #ifndef PID_CONTROLLER_HPP
 #define PID_CONTROLLER_HPP
 
+#include <vector>
+
 enum class FeedForwardType{
     
     // Applies a constant feedforward, regardless of direction
@@ -33,13 +35,28 @@ class PIDController{
         // Feedforward Gain. Type is determined by `m_feedforward_type`
         double m_kF;
 
+        // The setpoint to go towards
         double m_setpoint;
+
+        // The current position
         double m_position;
+
+        // The current velocity
+        double m_velocity;
+
+        // The accumulated error buffer
+        std::vector<double> accumulated_error;
+
+        // The timestamp of the previous loop
         double m_previous_timestamp;
 
-        double get_error(double setpoint = m_setpoint);
-        double get_error_rate();
+        double get_error(double setpoint);
         double get_accumulated_error();
+        double get_error_rate(double setpoint);
+
+        double calculate(double position);
+        double calculate(double position, double setpoint);
+        double calculate(double position, double setpoint, double velocity);
 
     private:
 

@@ -84,6 +84,9 @@ class ImPlotter{
 
     public:
 
+        // Flags
+        static ImPlotAxisFlags m_axis_flags;
+
         /**
          * @brief Initialize ImGui and its backends
          * 
@@ -177,9 +180,6 @@ class ImPlotter{
         // Map of Data Buffer
         static std::unordered_map<std::string, ImGui::ScrollingBuffer> m_data_map;
         // static ImGui::ScrollingBuffer m_data;
-
-        // Flags
-        static ImPlotAxisFlags m_axis_flags;
 
 
         /**

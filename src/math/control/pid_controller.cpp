@@ -41,7 +41,7 @@ double PIDController::get_error_rate()
 double PIDController::calculate(double timestamp, double position)
 {
     // Call the overload function with m_setpoint passed in as the setpoint
-    calculate(timestamp, position, m_setpoint);
+    return calculate(timestamp, position, m_setpoint);
 
 } // end of "calculate"
 

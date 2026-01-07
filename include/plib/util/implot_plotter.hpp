@@ -18,6 +18,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
+#include <cmath>
 
 // The code below (the code inside the namespace) is from `implot_demo.cpp`, this code is not mine
 

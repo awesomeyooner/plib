@@ -9,7 +9,7 @@ WireDevice::WireDevice(int address, int bus, int page_bytes)
     device.iaddr_bytes = 0;
     device.tenbit = 0;
     device.flags = 0;
-    device.delay = 10; // milliseconds
+    device.delay = 0; // milliseconds
 
 } // end of "WireDevice"
 

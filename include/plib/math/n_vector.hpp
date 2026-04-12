@@ -3,7 +3,8 @@
 
 
 #include <vector>
-
+#include <initializer_list>
+#include <cmath>
 
 template <int N>
 class Vector
@@ -18,6 +19,8 @@ class Vector
          */
         Vector(double default_values = 0);
 
+        Vector(std::initializer_list<double> list);
+
         Vector(std::vector<double> values);
 
         Vector(const Vector<N>& other);
@@ -28,6 +31,8 @@ class Vector
 
         int get_dimension();
 
+        douible& at(int index);
+
         double get(int index);
 
         void set(double value, int index);
@@ -36,25 +41,24 @@ class Vector
 
         Vector<N> divided_by(double scalar, int index = -1);
 
-        Vector<N> dot(const Vector<N>& other);
+        double dot(const Vector<N>& other);
 
         Vector<N> plus(const Vector<N>& other);
 
         Vector<N> minus(const Vector<N>& other);
+
+        bool equals(const Vector<N>& other);
 
         double& operator[](size_t index);
         const double& operator[](size_t index) const;
 
         Vector<N> operator+(const Vector<N>& other) const;
         Vector<N> operator-(const Vector<N>& other) const;
-        Vector<N> operator*(const Vector<N>& other) const;
         Vector<N> operator/(const Vector<N>& other) const;
 
         Vector<N>& operator=(const Vector<N>& other);
         Vector<N>& operator+=(const Vector<N>& other);
         Vector<N>& operator-=(const Vector<N>& other);
-        Vector<N>& operator*=(const Vector<N>& other);
-        Vector<N>& operator/=(const Vector<N>& other);
 
         bool operator==(const Vector<N>& other) const;
 

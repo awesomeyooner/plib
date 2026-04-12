@@ -214,7 +214,7 @@ void test_i2c()
 int main()
 {
     // test_spline();
-    test_pid();
+    // test_pid();
     // test_plotter();
     // test_i2c();
 

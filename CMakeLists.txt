@@ -12,7 +12,6 @@ add_library(plib
     src/util/logger.cpp
     src/util/status.cpp
     src/util/gnu_plotter.cpp
-    src/util/implot_plotter.cpp
     src/util/util.cpp
     src/util/system.cpp
 
@@ -26,44 +25,18 @@ add_library(plib
 
     # libi2c
     lib/libi2c/src/i2c.c
-
-    # ImGUI Core
-    lib/imgui/imgui_demo.cpp
-    lib/imgui/imgui_draw.cpp
-    lib/imgui/imgui_tables.cpp
-    lib/imgui/imgui_widgets.cpp
-    lib/imgui/imgui.cpp
-
-    # ImGUI Backend
-    lib/imgui/backends/imgui_impl_opengl3.cpp
-    lib/imgui/backends/imgui_impl_sdl2.cpp
-
-    # ImPlot
-    lib/implot/implot_demo.cpp
-    lib/implot/implot_items.cpp
-    lib/implot/implot.cpp
 )
-
+# dasd
 target_include_directories(plib
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib>
         $<INSTALL_INTERFACE:lib>
-
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/imgui>
-        $<INSTALL_INTERFACE:lib/imgui>
         # $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/imgui/backends>
         # $<INSTALL_INTERFACE:lib/imgui/backends>
         # $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/implot>
         # $<INSTALL_INTERFACE:lib/implot>
-
-        ${SDL2_INCLUDE_DIRS}
-)
-
-target_link_libraries(plib
-    OpenGL::GL
-    SDL2::SDL2 
 )
 
 target_compile_features(plib PUBLIC cxx_std_17)

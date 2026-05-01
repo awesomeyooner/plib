@@ -15,8 +15,6 @@ add_library(plib
     src/util/util.cpp
     src/util/system.cpp
 
-    src/i2c/drivers/psd17.cpp
-
     src/math/motion/cubic_hermite_spline.cpp
     src/math/control/pid_controller.cpp
 )

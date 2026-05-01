@@ -15,18 +15,12 @@ add_library(plib
     src/util/util.cpp
     src/util/system.cpp
 
-    src/i2c/i2c.cpp
-    src/i2c/wire_device.cpp
-
     src/i2c/drivers/psd17.cpp
 
     src/math/motion/cubic_hermite_spline.cpp
     src/math/control/pid_controller.cpp
-
-    # libi2c
-    lib/libi2c/src/i2c.c
 )
-# dasd
+
 target_include_directories(plib
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

@@ -11,7 +11,6 @@ find_package(SDL2 REQUIRED)
 add_library(${PROJECT_NAME}
     src/util/logger.cpp
     src/util/status.cpp
-    src/util/gnu_plotter.cpp
     src/util/util.cpp
     src/util/system.cpp
 

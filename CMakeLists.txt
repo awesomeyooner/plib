@@ -8,26 +8,17 @@ find_package(OpenGL REQUIRED)
 find_package(SDL2 REQUIRED)
 
 # === Main Library ===
-add_library(plib
+add_library(${PROJECT_NAME}
     src/util/logger.cpp
     src/util/status.cpp
-    src/util/gnu_plotter.cpp
     src/util/util.cpp
     src/util/system.cpp
 
-    src/i2c/i2c.cpp
-    src/i2c/wire_device.cpp
-
-    src/i2c/drivers/psd17.cpp
-
     src/math/motion/cubic_hermite_spline.cpp
     src/math/control/pid_controller.cpp
-
-    # libi2c
-    lib/libi2c/src/i2c.c
 )
-# dasd
-target_include_directories(plib
+
+target_include_directories(${PROJECT_NAME}
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
@@ -39,12 +30,12 @@ target_include_directories(plib
         # $<INSTALL_INTERFACE:lib/implot>
 )
 
-target_compile_features(plib PUBLIC cxx_std_17)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
 # Add the test executables only if this project is at the top level (aka not used with add_subdirectory)
 if(PROJECT_IS_TOP_LEVEL)
     add_executable(Test test/test.cpp)
     target_link_libraries(Test PRIVATE 
-        plib 
+        ${PROJECT_NAME}
     )
 endif()

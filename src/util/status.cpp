@@ -50,4 +50,12 @@ void print_status(StatusCode status)
 } // end of "print_status"
 
 
+
+StatusCode combine_statuses(std::vector<StatusCode> statuses)
+{
+    return statuses_OK(statuses) ? StatusCode::OK : StatusCode::FAILED;
+
+} // end of "combine_statuses(std::vector<StatusCode>)"
+
+
 } // namespace status_utils

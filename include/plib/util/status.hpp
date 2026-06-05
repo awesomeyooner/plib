@@ -34,6 +34,13 @@ std::string status_to_string(StatusCode status);
  */
 bool statuses_OK(std::vector<StatusCode> statuses);
 
+/**
+ * @brief Combines all statuses to return OK if all are OK and FAILED otherwise
+ * 
+ * @param statuses `std::vector<StatusCode>` List of StatusCodes
+ * @return `StatusCode` OK if all OK, FAILED otherwise 
+ */
+StatusCode combine_statuses(std::vector<StatusCode> statuses);
 
 /**
  * @brief Print the status

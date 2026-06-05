@@ -7,6 +7,7 @@
 #include <ctime>
 
 #include "plib/util/system.hpp"
+#include "plib/util/string_util.hpp"
 
 class Logger{
     
@@ -23,6 +24,20 @@ class Logger{
 
         // Log that Logger has been closed and close the log file
         static void close();
+
+        /**
+         * @brief Prints text to the terminal without newline
+         * 
+         * @param text `const std::string&`
+         */
+        static void print(const std::string& text);
+
+        /**
+         * @brief Prints text to the terminal with newline
+         * 
+         * @param text `const std::string&`
+         */
+        static void println(const std::string& text);
 
         /**
          * @brief Log the text with `INFO` as the header

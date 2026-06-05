@@ -1,5 +1,9 @@
 #include "plib/util/logger.hpp"
 
+
+using namespace string_util;
+
+
 std::ofstream Logger::m_log_file;
 bool Logger::m_should_write_to_file = false;
 
@@ -37,6 +41,20 @@ void Logger::close()
     m_log_file.close();
 
 } // end of "close"
+
+
+void Logger::print(const std::string& text)
+{
+    std::cout << text;
+
+} // end of "print(const std::string& text)"
+
+
+void Logger::println(const std::string& text)
+{
+    std::cout << text << std::endl;
+
+} // end of "println(const std::string& text)"
 
 
 void Logger::info(std::string text)
@@ -210,13 +228,13 @@ void Logger::log(std::string header, int data, bool should_write_to_file)
 std::string Logger::format_text(std::string header, std::string text)
 {
     // Create datetime string using `:` as unit seperator and just a space as a gap
-    std::string datetime = System::get_date_time(":", " ");
+    // std::string datetime = System::get_date_time(":", " ");
 
-    // [HEADER] + text
-    std::string formatted = datetime + " [" + header + "] " + text;
+    // [ HEADER ] + text
+    // std::string formatted = datetime + " [ " + header + " ] " + text;
 
     // Return the formatted text
-    return formatted;
+    return timestamped_header(header, text);
 
 } // end of "format_text"
 

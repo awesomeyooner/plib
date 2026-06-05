@@ -33,8 +33,8 @@ void test_plotter()
     while (System::is_alive())
     {
         // Sample Data
-        ImPlotter::push_data(sin(System::get_time_since_start()), "My First Line Plot");
-        ImPlotter::push_data(cos(System::get_time_since_start()), "My Second Line Plot");
+        ImPlotter::push_data(sin(System::get_epoch()), "My First Line Plot");
+        ImPlotter::push_data(cos(System::get_epoch()), "My Second Line Plot");
 
         // If the user requests to quit, then shutdown
         if (ImPlotter::update() == status_utils::StatusCode::FAILED)
@@ -174,7 +174,7 @@ void test_pid()
         pid_controller.m_integral_time_bound = M_PI;
         pid_controller.m_setpoint = 0;
 
-        double time = System::get_time_since_start();
+        double time = System::get_epoch();
 
         double position = std::sin(time);
 

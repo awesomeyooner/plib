@@ -85,7 +85,7 @@ class System{
          * 
          * @return `double` Time since epoch in `seconds`
          */
-        static double get_time_since_start();
+        static double get_epoch();
 
 
         /**

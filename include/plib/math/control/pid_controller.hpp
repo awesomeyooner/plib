@@ -59,7 +59,7 @@ struct TimestampedValue{
     void update(T value)
     {
         // Get the current time
-        double time = System::get_time_since_start();
+        double time = System::get_epoch();
         update(value, time);
 
     } // end of "update"

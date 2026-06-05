@@ -53,11 +53,11 @@ double System::get_time_difference(
 } // end of "get_time_difference"
 
 
-double System::get_time_since_start()
+double System::get_epoch()
 {
     return get_time_difference(get_timepoint(), m_start);
 
-} // end of "get_time_since_start"
+} // end of "get_epoch()"
 
 
 std::string System::get_date_time(std::string unit_seperator, std::string gap)

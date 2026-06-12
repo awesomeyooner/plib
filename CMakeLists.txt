@@ -15,6 +15,8 @@ add_library(${PROJECT_NAME}
     src/util/system.cpp
     src/util/string_util.cpp
 
+    src/math/units.cpp
+
     src/math/motion/cubic_hermite_spline.cpp
     src/math/control/pid_controller.cpp
 )

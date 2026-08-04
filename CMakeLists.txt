@@ -4,9 +4,6 @@ project( plib LANGUAGES C CXX )
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-find_package(OpenGL REQUIRED)
-find_package(SDL2 REQUIRED)
-
 # === Main Library ===
 add_library(${PROJECT_NAME}
     src/util/logger.cpp
@@ -27,10 +24,6 @@ target_include_directories(${PROJECT_NAME}
         $<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib>
         $<INSTALL_INTERFACE:lib>
-        # $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/imgui/backends>
-        # $<INSTALL_INTERFACE:lib/imgui/backends>
-        # $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/implot>
-        # $<INSTALL_INTERFACE:lib/implot>
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)

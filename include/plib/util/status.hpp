@@ -9,7 +9,8 @@
 namespace status_utils{
 
 
-enum class StatusCode{
+enum class StatusCode
+{
     OK,     // Use when the situation is what it's supposed to be
     ERROR,  // Use when the situation fails in an unexpected way 
     FAILED  // Use when the situation fails in a known and expected way
@@ -88,5 +89,6 @@ struct StatusedValue{
 }; // struct StatusedValue
 
 } // namespace status_util
+
 
 #endif // STATUS_HPP

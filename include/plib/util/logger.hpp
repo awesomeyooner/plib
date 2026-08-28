@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <ctime>
+#include <filesystem>
 
 #include "plib/util/system.hpp"
 #include "plib/util/string_util.hpp"
@@ -20,7 +21,7 @@ class Logger{
         static bool m_should_write_to_file;
 
         // Initialize the log file
-        static bool initialize();
+        static bool init(std::string extension = "log");
 
         // Log that Logger has been closed and close the log file
         static void close();
@@ -205,6 +206,27 @@ class Logger{
          * @param text `std::string` The text to write
          */
         static void write_to_file(std::string text);
+
+        /**
+         * @brief Write a `double` to a logfile
+         * 
+         * @param value `double`
+         */
+        static void write_to_file(double value);
+
+        /**
+         * @brief Write multiple `std::string`'s to a log file with CSV format
+         * 
+         * @param values `std::vector<std::string> values`
+         */
+        static void write_csv(std::vector<std::string> values);
+
+        /**
+         * @brief Write multiple `double`'s to a log file with CSV format
+         * 
+         * @param values `std::vector<std::string> values`
+         */
+        static void write_csv(std::vector<double> values);
 
         /**
          * @brief Returns if `m_log_file` is initialized and if it is open

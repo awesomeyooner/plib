@@ -2,17 +2,27 @@
 
 
 using namespace string_util;
+using namespace std;
+
+namespace fs = std::filesystem;
 
 
 std::ofstream Logger::m_log_file;
 bool Logger::m_should_write_to_file = false;
 
 
-bool Logger::initialize()
+bool Logger::init(std::string extension)
 {
+    // `YEAR-MONTH-DAY_HOUR_MIN_SEC
     std::string datetime = System::get_date_time("-", "_");
-    std::string file_name = "log_" + datetime + ".log";
-    m_log_file.open("../logs/" + file_name);
+    std::string filename = "log_" + datetime + "." + extension;
+
+    // If the /logs directory does not exist
+    // Then create it
+    if(!fs::is_directory("../logs/"))
+        fs::create_directory("../logs/");
+
+    m_log_file.open("../logs/" + filename);
 
     if(is_file_ok())
     {
@@ -25,7 +35,7 @@ bool Logger::initialize()
         return false;
     }
 
-} // end of "initialize"
+} // end of "initialize(std::string filename)"
 
 
 void Logger::close()
@@ -251,6 +261,55 @@ void Logger::write_to_file(std::string text)
     m_log_file << text << std::endl;
 
 } // end of "write_to_file"
+
+
+void Logger::write_to_file(double value)
+{
+    write_to_file(std::to_string(value));
+
+} // end of "write_to_file(double)"
+
+
+void Logger::write_csv(std::vector<std::string> values)
+{
+    std::string total = "";
+
+    for(int i = 0; i < values.size(); i++)
+    {
+        std::string value = values.at(i);
+
+        total += value;
+
+        // If this is NOT the last index
+        // Then add the comma
+        if(i != values.size() - 1)
+            total += ",";
+    }
+
+    write_to_file(total);
+
+} // end of "write_csv(std::vector<std::string>)"
+
+
+void Logger::write_csv(std::vector<double> values)
+{
+    std::string total = "";
+
+    for(int i = 0; i < values.size(); i++)
+    {
+        std::string value = std::to_string(values.at(i));
+
+        total += value;
+
+        // If this is NOT the last index
+        // Then add the comma
+        if(i != values.size() - 1)
+            total += ",";
+    }
+
+    write_to_file(total);
+
+} // end of "write_csv(std::vector<double>)"
 
 
 bool Logger::is_file_ok()

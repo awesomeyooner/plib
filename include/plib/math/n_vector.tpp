@@ -58,6 +58,7 @@ Vector<N>::Vector(const Vector<N>& data)
 
 } // end of "Vector(std::vector<double>)"
 
+
 template <int N>
 Vector<N> Vector<N>::copy()
 {
@@ -74,6 +75,7 @@ double Vector<N>::get_magnitude()
     return sqrt(dot_product);
 
 } // end of "get_magnitude()"
+
 
 template<int N>
 Vector<N> Vector<N>::with_magnitude(double magnitude)

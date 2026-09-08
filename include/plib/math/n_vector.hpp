@@ -7,6 +7,7 @@
 #include <cmath>
 #include <string>
 
+
 template <int N>
 class Vector
 {

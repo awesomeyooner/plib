@@ -84,6 +84,9 @@ class PIDController{
         // Feedforward Gain. Type is determined by `m_ff_type`
         double m_kF;
 
+        // Velocity Feedforward Gain. This is proportional to the setpoint
+        double m_kV;
+
         // The type of feedforward to use
         FeedForwardType m_ff_type;
 
@@ -99,8 +102,8 @@ class PIDController{
         // How much time between the current and last integrated value to use
         double m_integral_time_bound = 5; // seconds
 
-        PIDController(double kP, double kI, double kD);
-        PIDController(double kP, double kI, double kD, double kF, FeedForwardType ff_type);
+        PIDController(double kP = 0, double kI = 0, double kD = 0);
+        PIDController(double kP = 0, double kI = 0, double kD = 0, double kF = 0, FeedForwardType ff_type = FeedForwardType::STATIC_SIGNED);
 
         double get_error();
         double get_accumulated_error();

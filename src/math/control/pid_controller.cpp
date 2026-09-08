@@ -89,9 +89,10 @@ double PIDController::calculate(double timestamp, double position, double veloci
     double error_rate = get_error_rate();
     double accumulated_error = get_accumulated_error();
     double feedforward = get_feedforward();
+    double v_ff = m_kV * setpoint;
 
     // PID(F) Equation
-    double output = (m_kP * error) + (m_kI * accumulated_error) + (m_kD * error_rate) + feedforward;
+    double output = (m_kP * error) + (m_kI * accumulated_error) + (m_kD * error_rate) + feedforward + v_ff;
 
     return output;
 

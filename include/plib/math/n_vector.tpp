@@ -94,11 +94,80 @@ Vector<N> Vector<N>::get_unit_vector()
 
 
 template <int N>
+double Vector<N>::get_average()
+{
+    double accumulated = 0;
+    double size = m_size;
+
+    if(size == 0)
+        return 0;
+
+    for(const double& value : m_data)
+    {
+        accumulated += value;
+    }
+
+    return accumulated / size;
+
+} // end of "get_average()"
+
+
+template <int N>
+double Vector<N>::get_min()
+{
+    if(m_size == 0)
+        return 0;
+
+    double smallest = get(0);
+
+    for(int i = 1; i < m_size; i++)
+    {
+        double current = get(i);
+
+        if(current < smallest)
+            smallest = current;
+    }
+
+    return smallest;
+
+} // end of "get_min()"
+
+
+template <int N>
+double Vector<N>::get_max()
+{
+    if(m_size == 0)
+        return 0;
+
+    double biggest = get(0);
+
+    for(int i = 1; i < m_size; i++)
+    {
+        double current = get(i);
+
+        if(current > biggest)
+            biggest = current;
+    }
+
+    return biggest;
+
+} // end of "get_max()"
+
+
+template <int N>
 int Vector<N>::get_dimension()
 {
     return m_size;
 
 } // end of "get_dimension()"
+
+
+template <int N>
+std::vector<double> Vector<N>::get_data()
+{
+    return m_data;
+
+} // end of "get_data()"
 
 
 template <int N>

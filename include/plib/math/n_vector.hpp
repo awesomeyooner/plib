@@ -84,11 +84,43 @@ class Vector
         Vector<N> get_unit_vector();
 
         /**
+         * @brief Get the average value of all values in the vector
+         * 
+         * @return `double` 
+         */
+        double get_average();
+
+        /**
+         * @brief Get the min, smallest, value contained in this vector. This is not the value closest to 0, but
+         * the one that is "most negative", so -10 is smaller than 1 for instance since -10 is more negative, even though
+         * it has a larger magnitude.
+         * 
+         * @return `double` 
+         */
+        double get_min();
+
+        /**
+         * @brief Get the max, biggest, value contained in this vector. This is not the value furthest to 0, but
+         * the one that is "most positive", so 10 is bigger than -1000 for instance since 10 is more positive, even though
+         * it has a larger magnitude.
+         * 
+         * @return `double` 
+         */
+        double get_max();
+
+        /**
          * @brief Get the dimensions, aka size, of this vector
          * 
          * @return `int` 
          */
         int get_dimension();
+
+        /**
+         * @brief Get the underlying std::vector<double>
+         * 
+         * @return `std::vector<double>` 
+         */
+        std::vector<double> get_data();
 
         /**
          * @brief Gets a reference to the specific index

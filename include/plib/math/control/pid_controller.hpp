@@ -8,6 +8,8 @@
 
 #include "plib/util/system.hpp"
 #include "plib/util/logger.hpp"
+#include "plib/util/stamped_value.hpp"
+
 
 // Options for what Feed Forward method to use
 enum class FeedForwardType{
@@ -25,46 +27,6 @@ enum class FeedForwardType{
     SIN
 
 }; // enum FeedForwardType
-
-
-// Struct for a value to be shared with its timestamp since it was updated / created
-
-template <typename T>
-struct TimestampedValue{
-    
-    T m_value;
-    double m_timestamp;
-
-    TimestampedValue(T value, double timestamp)
-    {
-        update(value, timestamp);
-
-    } // end of TimestampedValue
-
-    TimestampedValue(T value)
-    {
-        update(value);
-
-    } // end of TimestampedValue
-
-    // One-liner for updating the values
-    void update(T value, double timestamp)
-    {
-        m_value = value;
-        m_timestamp = timestamp;
-
-    } // end of update
-
-    // Updates the value and auto refreshes the timestamp
-    void update(T value)
-    {
-        // Get the current time
-        double time = System::get_epoch();
-        update(value, time);
-
-    } // end of "update"
-
-}; // struct TimestampedValue
 
 
 // Class for a PID Controller, implementing feedforwards in addition to PID.
@@ -121,7 +83,7 @@ class PIDController{
         // Buffer for storing previous loops' errors
         // The front has the MOST RECENT error
         // The back has the OLDEST error
-        std::deque<TimestampedValue<double>> m_error_buffer;
+        std::deque<StampedValue<double>> m_error_buffer;
         
         // The accumulated error (integral of error within the bounds)
         double m_accumulated_error;

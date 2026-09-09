@@ -48,32 +48,22 @@ double PIDController::calculate(double timestamp, double position)
 
 double PIDController::calculate(double timestamp, double position, double setpoint)
 {
-    // Update the setpoint
-    m_setpoint = setpoint;
+    double dx = position - m_position;
+    double dt = timestamp - m_prev_timestamp;
 
-    // Update the states
-    m_position = position;
+    // If dt is non zero, then = dx/dt, if it is then velocity = 0
+    double velocity = dt != 0 ? dx / dt : 0; 
 
-    // Update the error area and velocity approximations
-    update_accumulated_error(timestamp, position);
-    update_error_rate(timestamp, position);
-
-    // Get the errors and feedforward
-    double error = get_error();
-    double error_rate = get_error_rate();
-    double accumulated_error = get_accumulated_error();
-    double feedforward = get_feedforward();
-
-    // PID(F) Equation
-    double output = (m_kP * error) + (m_kI * accumulated_error) + (m_kD * error_rate) + feedforward;
-
-    return output;
+    return calculate(timestamp, position, velocity, setpoint);
 
 } // end of "calculate"
 
 
 double PIDController::calculate(double timestamp, double position, double velocity, double setpoint)
 {
+    // Keep track of last time this was called
+    m_prev_timestamp = timestamp;
+
     // Update the setpoint
     m_setpoint = setpoint;
 
@@ -88,11 +78,11 @@ double PIDController::calculate(double timestamp, double position, double veloci
     double error = get_error();
     double error_rate = get_error_rate();
     double accumulated_error = get_accumulated_error();
-    double feedforward = get_feedforward();
-    double v_ff = m_kV * setpoint;
+    double static_ff = get_static_feedforward();
+    double velocity_ff = get_velocity_feedforward(setpoint);
 
     // PID(F) Equation
-    double output = (m_kP * error) + (m_kI * accumulated_error) + (m_kD * error_rate) + feedforward + v_ff;
+    double output = (m_kP * error) + (m_kI * accumulated_error) + (m_kD * error_rate) + static_ff, velocity_ff;
 
     return output;
 
@@ -182,7 +172,7 @@ double PIDController::update_error_rate(double timestamp, double position)
 } // end of "update_error_rate"
 
 
-double PIDController::get_feedforward()
+double PIDController::get_static_feedforward()
 {
     // Return the correspodning values based on the type
     switch(m_ff_type)
@@ -208,4 +198,11 @@ double PIDController::get_feedforward()
             return 0;
     }
 
-} // end of "get_feedforward"
+} // end of "get_static_feedforward()"
+
+
+double PIDController::get_velocity_feedforward(double setpoint)
+{
+    return m_kV * setpoint;
+
+} // end of "get_velocity_feedforward(double)"

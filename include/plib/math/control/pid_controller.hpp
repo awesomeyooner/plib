@@ -73,34 +73,37 @@ class PIDController{
     public:
 
         // Proportional Gain
-        double m_kP;
+        double m_kP = 0;
         
         // Integral Gain
-        double m_kI;
+        double m_kI = 0;
         
         // Derivative Gain
-        double m_kD;
+        double m_kD = 0;
 
-        // Feedforward Gain. Type is determined by `m_ff_type`
-        double m_kF;
+        // Static Feedforward Gain. Type is determined by `m_ff_type`
+        double m_kF = 0;
 
         // Velocity Feedforward Gain. This is proportional to the setpoint
-        double m_kV;
+        double m_kV = 0;
 
         // The type of feedforward to use
-        FeedForwardType m_ff_type;
-
-        // The setpoint to go towards
-        double m_setpoint;
-
-        // The current position
-        double m_position;
-
-        // The current velocity
-        double m_velocity;
+        FeedForwardType m_ff_type = FeedForwardType::STATIC_SIGNED;
 
         // How much time between the current and last integrated value to use
         double m_integral_time_bound = 5; // seconds
+
+        // The setpoint to go towards
+        double m_setpoint = 0;
+
+        // The current position
+        double m_position = 0;
+
+        // The current velocity
+        double m_velocity = 0;
+
+        // The timestamp since the last time `calculate` was called
+        double m_prev_timestamp = 0;
 
         PIDController(double kP = 0, double kI = 0, double kD = 0);
         PIDController(double kP = 0, double kI = 0, double kD = 0, double kF = 0, FeedForwardType ff_type = FeedForwardType::STATIC_SIGNED);
@@ -125,7 +128,8 @@ class PIDController{
 
         double update_accumulated_error(double timestamp, double position);
         double update_error_rate(double timestamp, double position);
-        double get_feedforward();
+        double get_static_feedforward();
+        double get_velocity_feedforward(double setpoint);
 
 
 }; // class PIDController

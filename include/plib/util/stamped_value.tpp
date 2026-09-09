@@ -22,7 +22,7 @@ void StampedValue<T>::update(T value, double timestamp)
 {
     // Save the previous values before updating
     m_prev_value = m_value;
-    m_prev_timestamp = timestamp;
+    m_prev_timestamp = m_timestamp;
 
     // Update new values
     m_value = value;

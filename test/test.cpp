@@ -11,6 +11,8 @@
 
 #include "plib/math/n_vector.hpp"
 
+#include "plib/util/stamped_value.hpp"
+
 
 using namespace std;
 
